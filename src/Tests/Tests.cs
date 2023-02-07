@@ -53,6 +53,53 @@ public class Tests
     }
 
     [Test]
+    public Task ModifyStyles()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+        var document = documentBuilder.Document;
+
+        documentBuilder.WriteH2("the text");
+
+        #region ModifyStyles
+
+        document.ModifyStyles(_ =>
+        {
+            if (_.Font != null)
+            {
+                _.Font.Italic = false;
+            }
+        });
+
+        #endregion
+
+        return Verify(document);
+    }
+
+    [Test]
+    public Task ModifyStyleFonts()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+        var document = documentBuilder.Document;
+
+        documentBuilder.WriteH2("the text");
+
+        #region ModifyStyleFonts
+
+        document.ModifyStyleFonts(_ =>
+        {
+            _.Italic = false;
+        });
+
+        #endregion
+
+        return Verify(document);
+    }
+
+    [Test]
     public Task SetMargins()
     {
         var documentBuilder = new DocumentBuilder();
@@ -169,6 +216,7 @@ public class Tests
     {
         var documentBuilder = new DocumentBuilder();
         documentBuilder.SetMargins(0);
+
         #region AppendWorkbook
 
         documentBuilder.AppendWorkbook("sample.xlsx");
