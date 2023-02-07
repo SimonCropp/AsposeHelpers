@@ -3,6 +3,7 @@ using Aspose.Cells;
 using Aspose.Pdf.Devices;
 using Aspose.Slides;
 using Aspose.Words.Drawing;
+using LoadOptions = Aspose.Slides.LoadOptions;
 using Shape = Aspose.Words.Drawing.Shape;
 
 namespace Aspose.Words;
@@ -90,27 +91,27 @@ public static class WordExtensions
             height: -1,
             WrapType.Square);
 
-    public static void AppendPresentation(this DocumentBuilder builder, Aspose.Slides.LoadFormat format, Stream stream)
+    public static void AppendPresentation(this DocumentBuilder builder, Stream stream, Aspose.Slides.LoadFormat? format = null)
     {
-        using var presentation = new Presentation(stream, new(format));
+        var options = new LoadOptions();
+        if (format != null)
+        {
+            options.LoadFormat = format.Value;
+        }
+
+        using var presentation = new Presentation(stream, options);
         AppendPresentation(builder, presentation);
     }
 
-    public static void AppendPresentation(this DocumentBuilder builder, Aspose.Slides.LoadFormat format, string file)
+    public static void AppendPresentation(this DocumentBuilder builder, string file, Aspose.Slides.LoadFormat? format = null)
     {
-        using var presentation = new Presentation(file, new(format));
-        AppendPresentation(builder, presentation);
-    }
+        var options = new LoadOptions();
+        if (format != null)
+        {
+            options.LoadFormat = format.Value;
+        }
 
-    public static void AppendPresentation(this DocumentBuilder builder, Stream stream)
-    {
-        using var presentation = new Presentation(stream, new());
-        AppendPresentation(builder, presentation);
-    }
-
-    public static void AppendPresentation(this DocumentBuilder builder, string file)
-    {
-        using var presentation = new Presentation(file);
+        using var presentation = new Presentation(file, options);
         AppendPresentation(builder, presentation);
     }
 
@@ -163,41 +164,25 @@ public static class WordExtensions
         }
     }
 
-    public static void AppendWord(this DocumentBuilder builder, LoadFormat format, Stream stream)
+    public static void AppendWord(this DocumentBuilder builder, Stream stream, LoadFormat format = LoadFormat.Auto)
     {
-        var document = new Document(
-            stream,
-            new()
-            {
-                LoadFormat = format
-            });
+        var options = new Loading.LoadOptions
+        {
+            LoadFormat = format
+        };
 
+        var document = new Document(stream, options);
         AppendWord(builder, document);
     }
 
-    public static void AppendWord(this DocumentBuilder builder, LoadFormat format, string file)
+    public static void AppendWord(this DocumentBuilder builder, string file, LoadFormat format = LoadFormat.Auto)
     {
-        var document = new Document(
-            file,
-            new()
-            {
-                LoadFormat = format
-            });
+        var options = new Loading.LoadOptions
+        {
+            LoadFormat = format
+        };
 
-        AppendWord(builder, document);
-    }
-
-    public static void AppendWord(this DocumentBuilder builder, Stream stream)
-    {
-        var document = new Document(stream);
-
-        AppendWord(builder, document);
-    }
-
-    public static void AppendWord(this DocumentBuilder builder, string file)
-    {
-        var document = new Document(file);
-
+        var document = new Document(file, options);
         AppendWord(builder, document);
     }
 
@@ -225,25 +210,13 @@ public static class WordExtensions
         }
     }
 
-    public static void AppendWorkbook(this DocumentBuilder builder, string file)
-    {
-        using var book = new Workbook(file);
-        AppendWorkbook(builder, book);
-    }
-
-    public static void AppendWorkbook(this DocumentBuilder builder, Stream stream)
-    {
-        using var book = new Workbook(stream);
-        AppendWorkbook(builder, book);
-    }
-
-    public static void AppendWorkbook(this DocumentBuilder builder, Cells.LoadOptions options, string file)
+    public static void AppendWorkbook(this DocumentBuilder builder, string file, Cells.LoadOptions? options = null)
     {
         using var book = new Workbook(file, options);
         AppendWorkbook(builder, book);
     }
 
-    public static void AppendWorkbook(this DocumentBuilder builder, Cells.LoadOptions options, Stream stream)
+    public static void AppendWorkbook(this DocumentBuilder builder, Stream stream, Cells.LoadOptions? options = null)
     {
         using var book = new Workbook(stream, options);
         AppendWorkbook(builder, book);
