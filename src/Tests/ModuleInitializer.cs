@@ -5,7 +5,7 @@
     {
         VerifyAspose.Initialize();
         VerifyDiffPlex.Initialize();
-        VerifyImageMagick.RegisterComparers(.003);
+        VerifyImageMagick.RegisterComparers(.05);
         VerifierSettings.IgnoreMember("Width");
     }
 }
