@@ -1,0 +1,20 @@
+﻿{
+  HasRevisions: False,
+  DefaultLocale: EnglishUS,
+  Properties: {
+    HeadingPairs: [
+      Title,
+      1
+    ],
+    Lines: 1,
+    NameOfApplication: Aspose.Words,
+    Pages: 1,
+    Paragraphs: 1,
+    RevisionNumber: 1,
+    Template: Normal.dot,
+    TitlesOfParts: [
+      
+    ],
+    Version: 726502
+  }
+}

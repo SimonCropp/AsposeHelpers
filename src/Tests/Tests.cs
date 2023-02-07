@@ -1,0 +1,180 @@
+﻿using Aspose.Words;
+
+[TestFixture]
+public class Tests
+{
+
+    [Test]
+    public Task WriteEmail()
+    {
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region WriteEmail
+
+        builder.WriteEmail("the mail");
+
+        #endregion
+
+        return Verify(builder.Document);
+    }
+
+    [Test]
+    public Task WriteLink()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region WriteLink
+
+        documentBuilder.WriteLink("the text", "the url");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task WriteH1()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region WriteH1
+
+        documentBuilder.WriteH1("the text");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task SetMargins()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        documentBuilder.WriteH1("the text");
+
+        #region SetMargins
+
+        documentBuilder.SetMargins(10);
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task ApplyBorder()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region ApplyBorder
+
+        documentBuilder.ApplyBorder(LineStyle.Thick);
+        documentBuilder.Write("some text");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task InsertFullPageImage()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        documentBuilder.SetMargins(10);
+
+        #region InsertFullPageImage
+
+        documentBuilder.InsertFullPageImage(File.OpenRead("sample.jpg"));
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task InsertFullPageImageFile()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        documentBuilder.SetMargins(10);
+        documentBuilder.InsertFullPageImage("sample.jpg");
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task AppendPresentation()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region AppendPresentation
+
+        documentBuilder.AppendPresentation("sample.pptx");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task AppendPdf()
+    {
+        var documentBuilder = new DocumentBuilder();
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        #region AppendPdf
+
+        documentBuilder.AppendPdf("sample.pdf");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task AppendWord()
+    {
+        var documentBuilder = new DocumentBuilder();
+
+        #region AppendWord
+
+        documentBuilder.AppendWord("sample.docx");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task AppendWorkbook()
+    {
+        var documentBuilder = new DocumentBuilder();
+        documentBuilder.SetMargins(0);
+        #region AppendWorkbook
+
+        documentBuilder.AppendWorkbook("sample.xlsx");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
+}
