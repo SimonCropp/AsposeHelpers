@@ -6,6 +6,7 @@
 *.xlsx binary
 *.pptx binary
 *.ppt binary
+*.jpg binary
 
 *.verified.txt text eol=lf
 *.verified.xml text eol=lf
