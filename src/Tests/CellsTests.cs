@@ -37,4 +37,14 @@ public class CellsTests
         cell.PutValue("Hello World!");
         await Verify(sheet.FirstNullCell(0));
     }
+
+    [Test]
+    public async Task AddColumn()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        sheet.AddColumn("Hello World!");
+        await Verify(workbook);
+    }
 }
