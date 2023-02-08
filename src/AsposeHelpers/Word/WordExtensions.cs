@@ -3,7 +3,7 @@
 namespace Aspose.Words;
 
 public static partial class WordExtensions
-{
+    {
     public static void WriteEmail(this DocumentBuilder builder, string email)
     {
         builder.Font.Color = Color.Blue;

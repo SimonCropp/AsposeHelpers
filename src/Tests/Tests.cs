@@ -1,9 +1,8 @@
 ﻿using Aspose.Words;
 
 [TestFixture]
-public class Tests
+public class WordTests
 {
-
     [Test]
     public Task WriteEmail()
     {
