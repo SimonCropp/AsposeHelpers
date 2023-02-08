@@ -14,6 +14,7 @@ public class CellsTests
         sheet.MakeHeadingsBold();
         await Verify(workbook);
     }
+
     [Test]
     public async Task MakeHeadingsBoldBook()
     {
@@ -24,5 +25,16 @@ public class CellsTests
         cell.PutValue("Hello World!");
         workbook.MakeHeadingsBold();
         await Verify(workbook);
+    }
+
+    [Test]
+    public async Task FirstNullCell()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.Cells["A1"];
+        cell.PutValue("Hello World!");
+        await Verify(sheet.FirstNullCell(0));
     }
 }
