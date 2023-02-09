@@ -20,6 +20,24 @@ public class WordTests
     }
 
     [Test]
+    public Task AddPageNumbers()
+    {
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        builder.Writeln("the text");
+
+        #region AddPageNumbers
+
+        builder.AddPageNumbers();
+
+        #endregion
+
+        return Verify(builder.Document);
+    }
+
+    [Test]
     public Task WriteLink()
     {
         var documentBuilder = new DocumentBuilder();

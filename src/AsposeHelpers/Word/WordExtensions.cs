@@ -62,4 +62,14 @@ public static partial class WordExtensions
         borders[BorderType.Top].LineStyle = style;
         borders[BorderType.Bottom].LineStyle = style;
     }
+
+    public static void AddPageNumbers(this DocumentBuilder builder)
+    {
+        builder.MoveToHeaderFooter(HeaderFooterType.FooterPrimary);
+        builder.ParagraphFormat.Alignment = ParagraphAlignment.Right;
+        builder.Write("Page ");
+        builder.InsertField(Fields.FieldType.FieldPage, true);
+        builder.Write(" of ");
+        builder.InsertField(Fields.FieldType.FieldNumPages, true);
+    }
 }
