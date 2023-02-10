@@ -242,4 +242,19 @@ public class WordTests
 
         return Verify(documentBuilder.Document);
     }
+
+    [Test]
+    public Task AppendMail()
+    {
+        var documentBuilder = new DocumentBuilder();
+        documentBuilder.SetMargins(0);
+
+        #region AppendMail
+
+        documentBuilder.AppendMail("sample.msg");
+
+        #endregion
+
+        return Verify(documentBuilder.Document);
+    }
 }
