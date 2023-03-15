@@ -24,7 +24,7 @@ public static partial class WordExtensions
             using var imageStream = new MemoryStream();
             var pngDevice = new PngDevice();
             pngDevice.Process(page, imageStream);
-            InsertFullPageImage(builder, imageStream);
+            builder.InsertImage(imageStream);
             if (index < document.Pages.Count - 1)
             {
                 builder.InsertBreak(BreakType.PageBreak);

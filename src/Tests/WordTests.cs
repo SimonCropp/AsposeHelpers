@@ -152,37 +152,6 @@ public class WordTests
     }
 
     [Test]
-    public Task InsertFullPageImage()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        documentBuilder.SetMargins(10);
-
-        #region InsertFullPageImage
-
-        documentBuilder.InsertFullPageImage(File.OpenRead("sample.jpg"));
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task InsertFullPageImageFile()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        documentBuilder.SetMargins(10);
-        documentBuilder.InsertFullPageImage("sample.jpg");
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
     public Task AppendPresentation()
     {
         var documentBuilder = new DocumentBuilder();

@@ -44,7 +44,7 @@ public static partial class WordExtensions
             };
             using var imageStream = new MemoryStream();
             document.Save(imageStream, options);
-            InsertFullPageImage(builder, imageStream);
+            builder.InsertImage(imageStream);
             if (index < document.PageCount - 1)
             {
                 builder.InsertBreak(BreakType.PageBreak);
