@@ -1,4 +1,6 @@
-﻿namespace Aspose.Words;
+﻿using Aspose.Words.Drawing;
+
+namespace Aspose.Words;
 
 public static partial class WordExtensions
 {
@@ -44,7 +46,8 @@ public static partial class WordExtensions
             };
             using var imageStream = new MemoryStream();
             document.Save(imageStream, options);
-            builder.InsertImage(imageStream);
+            var image = builder.InsertImage(imageStream);
+            image.WrapType = WrapType.Square;
             if (index < document.PageCount - 1)
             {
                 builder.InsertBreak(BreakType.PageBreak);
