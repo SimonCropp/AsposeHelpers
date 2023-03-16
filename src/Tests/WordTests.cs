@@ -190,6 +190,7 @@ public class WordTests
 
         #region AppendWord
 
+        documentBuilder.WriteH3("sample.docx");
         documentBuilder.AppendWord("sample.docx");
 
         #endregion
