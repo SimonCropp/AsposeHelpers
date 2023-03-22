@@ -19,8 +19,8 @@ public class WordTests
         {
             process.Kill();
         }
-        document.Save(path);
         File.Delete(path);
+        File.Delete(@"C:\Code\inputdocs\~$word.docx");
         foreach (var file in Directory.EnumerateFiles(@"C:\Code\inputdocs"))
         {
             builder.PageSetup.ClearFormatting();
@@ -34,6 +34,7 @@ public class WordTests
             // builder.PageSetup.PaperSize = PaperSize.A4;
         }
 
+        document.Save(path);
         //return Verify(document);
         var startInfo = new ProcessStartInfo(path)
         {
