@@ -1,230 +1,46 @@
 ﻿using Aspose.Words;
+using Document = Aspose.Words.Document;
+using Task = System.Threading.Tasks.Task;
 
 [TestFixture]
 public class WordTests
 {
     [Test]
-    public Task WriteEmail()
+    public Task AppendDocument()
     {
-        var builder = new DocumentBuilder();
-        var pageSetup = builder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
+        var lic = new License();
+        lic.SetLicense(@"C:\Code\MinisterialProgramManager\src\Manager\Aspose.Total.lic");
+        var document = new Document();
+        document.RemoveAllChildren();
 
-        #region WriteEmail
-
-        builder.WriteEmail("the mail");
-
-        #endregion
-
-        return Verify(builder.Document);
-    }
-
-    [Test]
-    public Task AddPageNumbers()
-    {
-        var builder = new DocumentBuilder();
-        var pageSetup = builder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        builder.Writeln("the text");
-
-        #region AddPageNumbers
-
-        builder.AddPageNumbers();
-
-        #endregion
-
-        return Verify(builder.Document);
-    }
-
-    [Test]
-    public Task WriteLink()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        #region WriteLink
-
-        documentBuilder.WriteLink("the text", "the url");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task WriteH1()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        #region WriteH1
-
-        documentBuilder.WriteH1("the text");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task ModifyStyles()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-        var document = documentBuilder.Document;
-
-        documentBuilder.WriteH2("the text");
-
-        #region ModifyStyles
-
-        document.ModifyStyles(_ =>
+        var builder = new DocumentBuilder(document);
+        var path = @"C:\Code\inputdocs\word.docx";
+        foreach (var process in Process.GetProcessesByName("WINWORD"))
         {
-            if (_.Font != null)
-            {
-                _.Font.Italic = false;
-            }
-        });
-
-        #endregion
-
-        return Verify(document);
-    }
-
-    [Test]
-    public Task ModifyStyleFonts()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-        var document = documentBuilder.Document;
-
-        documentBuilder.WriteH2("the text");
-
-        #region ModifyStyleFonts
-
-        document.ModifyStyleFonts(_ =>
+            process.Kill();
+        }
+        document.Save(path);
+        File.Delete(path);
+        foreach (var file in Directory.EnumerateFiles(@"C:\Code\inputdocs"))
         {
-            _.Italic = false;
-        });
+            builder.PageSetup.ClearFormatting();
+            builder.WriteH1(file);
+            var input = new Document(file);
+            builder.CurrentSection.PageSetup.Orientation = Orientation.Portrait;
+            builder.InsertDocument(input, ImportFormatMode.KeepSourceFormatting);
+            builder.PageSetup.ClearFormatting();
+            builder.InsertBreak(BreakType.PageBreak);
+            // builder.PageSetup.Orientation = Orientation.Portrait;
+            // builder.PageSetup.PaperSize = PaperSize.A4;
+        }
 
-        #endregion
-
-        return Verify(document);
+        //return Verify(document);
+        var startInfo = new ProcessStartInfo(path)
+        {
+            UseShellExecute = true
+        };
+        Process.Start(startInfo);
+        return Task.CompletedTask;
     }
 
-    [Test]
-    public Task SetMargins()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        documentBuilder.WriteH1("the text");
-
-        #region SetMargins
-
-        documentBuilder.SetMargins(10);
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task ApplyBorder()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        #region ApplyBorder
-
-        documentBuilder.ApplyBorder(LineStyle.Thick);
-        documentBuilder.Write("some text");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task AppendPresentation()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        #region AppendPresentation
-
-        documentBuilder.AppendPresentation("sample.pptx");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task AppendPdf()
-    {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
-        pageSetup.PaperSize = PaperSize.A5;
-
-        #region AppendPdf
-
-        documentBuilder.AppendPdf("sample.pdf");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task AppendWord()
-    {
-        var documentBuilder = new DocumentBuilder();
-
-        #region AppendWord
-
-        documentBuilder.WriteH3("sample.docx");
-        documentBuilder.AppendWord("sample.docx");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task AppendWorkbook()
-    {
-        var documentBuilder = new DocumentBuilder();
-        documentBuilder.SetMargins(0);
-
-        #region AppendWorkbook
-
-        documentBuilder.AppendWorkbook("sample.xlsx");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
-
-    [Test]
-    public Task AppendMail()
-    {
-        var documentBuilder = new DocumentBuilder();
-        documentBuilder.SetMargins(0);
-
-        #region AppendMail
-
-        documentBuilder.AppendMail("sample.msg");
-
-        #endregion
-
-        return Verify(documentBuilder.Document);
-    }
 }
