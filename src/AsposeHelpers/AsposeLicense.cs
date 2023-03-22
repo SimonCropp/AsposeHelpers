@@ -2,6 +2,30 @@ namespace AsposeHelpers;
 
 public static class AsposeLicense
 {
+    public static void ApplyFromResource(string name = "Aspose.Total.lic")
+    {
+        var stream = GetStream(Assembly.GetCallingAssembly(), name);
+
+        Apply(stream);
+    }
+
+    static Stream GetStream(Assembly callingAssembly, string name)
+    {
+        var stream = callingAssembly.GetManifestResourceStream($"{callingAssembly.GetName().Name}.{name}");
+        if (stream != null)
+        {
+            return stream;
+        }
+
+        stream = callingAssembly.GetManifestResourceStream(name);
+        if (stream != null)
+        {
+            return stream;
+        }
+
+        throw new("Could not find Aspose.Total.lic");
+    }
+
     public static void Apply(Stream stream)
     {
         Email(stream);
