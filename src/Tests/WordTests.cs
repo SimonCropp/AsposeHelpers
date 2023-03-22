@@ -11,27 +11,33 @@ public class WordTests
         var lic = new License();
         lic.SetLicense(@"C:\Code\MinisterialProgramManager\src\Manager\Aspose.Total.lic");
         var document = new Document();
-        document.RemoveAllChildren();
 
         var builder = new DocumentBuilder(document);
+        var setup = builder.PageSetup;
+        setup.PaperSize = PaperSize.A4;
+        setup.Margins = Margins.Narrow;
+        setup.Orientation = Orientation.Portrait;
         var path = @"C:\Code\inputdocs\word.docx";
         foreach (var process in Process.GetProcessesByName("WINWORD"))
         {
             process.Kill();
+            process.WaitForExit();
         }
         File.Delete(path);
         File.Delete(@"C:\Code\inputdocs\~$word.docx");
         foreach (var file in Directory.EnumerateFiles(@"C:\Code\inputdocs"))
         {
-            builder.PageSetup.ClearFormatting();
+            setup.ClearFormatting();
             builder.WriteH1(file);
             var input = new Document(file);
-            builder.CurrentSection.PageSetup.Orientation = Orientation.Portrait;
-            builder.InsertDocument(input, ImportFormatMode.KeepSourceFormatting);
-            builder.PageSetup.ClearFormatting();
+            var nestedBuilder = new DocumentBuilder(document);
+            var nestedSetup = nestedBuilder.PageSetup;
+            nestedSetup.PaperSize = setup.PaperSize;
+            nestedSetup.Margins = setup.Margins;
+            nestedSetup.Orientation = setup.Orientation;
+
+            builder.InsertDocument(input, ImportFormatMode.UseDestinationStyles);
             builder.InsertBreak(BreakType.PageBreak);
-            // builder.PageSetup.Orientation = Orientation.Portrait;
-            // builder.PageSetup.PaperSize = PaperSize.A4;
         }
 
         document.Save(path);
