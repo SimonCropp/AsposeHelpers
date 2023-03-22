@@ -11,19 +11,15 @@ public static class AsposeLicense
 
     static Stream GetStream(Assembly callingAssembly, string name)
     {
-        var stream = callingAssembly.GetManifestResourceStream($"{callingAssembly.GetName().Name}.{name}");
-        if (stream != null)
+        var fullName = callingAssembly
+            .GetManifestResourceNames()
+            .SingleOrDefault(_ => _.Equals(name));
+        if (fullName == null)
         {
-            return stream;
+            throw new($"Could not find resource: {name}");
         }
 
-        stream = callingAssembly.GetManifestResourceStream(name);
-        if (stream != null)
-        {
-            return stream;
-        }
-
-        throw new("Could not find Aspose.Total.lic");
+        return callingAssembly.GetManifestResourceStream(fullName)!;
     }
 
     public static void Apply(Stream stream)
