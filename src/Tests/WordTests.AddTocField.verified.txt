@@ -1,0 +1,27 @@
+﻿{
+  HasRevisions: False,
+  DefaultLocale: EnglishUS,
+  Properties: {
+    HeadingPairs: [
+      Title,
+      1
+    ],
+    Lines: 1,
+    Pages: 1,
+    Paragraphs: 1,
+    RevisionNumber: 1
+  },
+  Text:
+![](content.001.png)
+
+**Evaluation Only. Created with Aspose.Words. Copyright 2003-2023 Aspose Pty Ltd.**
+
+[Custom toc entry	1](#_toc256000000)
+
+the text
+
+<a name="_toc256000000"></a> TC  "Custom toc entry" \l 2
+
+**Created with an evaluation copy of Aspose.Words. To discover the full versions of our APIs please visit: https://products.aspose.com/words/**
+
+}

@@ -38,6 +38,22 @@ public class WordTests
     }
 
     [Test]
+    public Task AddTocField()
+    {
+        var builder = new DocumentBuilder();
+
+        builder.InsertTableOfContents("""TOC \o "2-3" \f \h \z \u""");
+
+        builder.Writeln("the text");
+
+        builder.WriteTocEntry("Custom toc entry", 2);
+
+        builder.Document.UpdateFields();
+
+        return Verify(builder.Document);
+    }
+
+    [Test]
     public Task WriteLink()
     {
         var documentBuilder = new DocumentBuilder();
