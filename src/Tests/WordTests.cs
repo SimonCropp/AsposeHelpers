@@ -38,7 +38,7 @@ public class WordTests
     }
 
     [Test]
-    public Task AddTocField()
+    public Task InsertTocEntry()
     {
         var builder = new DocumentBuilder();
 
@@ -46,7 +46,7 @@ public class WordTests
 
         builder.Writeln("the text");
 
-        builder.WriteTocEntry("Custom toc entry", 2);
+        builder.InsertTocEntry("Custom toc entry", 2);
 
         builder.Document.UpdateFields();
 
