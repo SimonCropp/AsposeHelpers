@@ -4,8 +4,7 @@ public static class AsposeLicense
 {
     public static void ApplyFromResource(string name = "Aspose.Total.lic")
     {
-        var stream = GetStream(Assembly.GetCallingAssembly(), name);
-
+        using var stream = GetStream(Assembly.GetCallingAssembly(), name);
         Apply(stream);
     }
 
