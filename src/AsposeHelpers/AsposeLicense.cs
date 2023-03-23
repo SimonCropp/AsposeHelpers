@@ -12,7 +12,7 @@ public static class AsposeLicense
     {
         var fullName = callingAssembly
             .GetManifestResourceNames()
-            .SingleOrDefault(_ => _.Equals(name));
+            .SingleOrDefault(_ => _.EndsWith(name));
         if (fullName == null)
         {
             throw new($"Could not find resource: {name}");
