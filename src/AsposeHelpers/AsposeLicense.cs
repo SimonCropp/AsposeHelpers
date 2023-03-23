@@ -10,9 +10,9 @@ public static class AsposeLicense
 
     static Stream GetStream(Assembly callingAssembly, string name)
     {
-        var fullName = callingAssembly
-            .GetManifestResourceNames()
-            .SingleOrDefault(_ => _.EndsWith(name));
+        var names = callingAssembly
+            .GetManifestResourceNames();
+        var fullName = names.SingleOrDefault(_ => _.EndsWith(name));
         if (fullName == null)
         {
             throw new($"Could not find resource: {name}");
