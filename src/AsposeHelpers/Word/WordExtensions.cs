@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Aspose.Words.Fields;
 
 namespace Aspose.Words;
 
@@ -10,6 +11,19 @@ public static partial class WordExtensions
         builder.Font.Underline = Underline.Single;
         builder.InsertHyperlink(email, $"mailto://{email}", false);
         builder.Font.ClearFormatting();
+    }
+
+    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int entryLevel, bool pageNumber = true) =>
+        InsertTocEntry(builder,  text, entryLevel.ToString(), pageNumber);
+
+    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string entryLevel, bool pageNumber = true)
+    {
+        var field = (FieldTC) builder.InsertField(FieldType.FieldTOCEntry, true);
+        field.EntryLevel = entryLevel;
+        field.OmitPageNumber = !pageNumber;
+        field.Text = text;
+        builder.Writeln();
+        return field;
     }
 
     public static void WriteLink(this DocumentBuilder builder, string text, string link)
@@ -68,8 +82,8 @@ public static partial class WordExtensions
         builder.MoveToHeaderFooter(HeaderFooterType.FooterPrimary);
         builder.ParagraphFormat.Alignment = ParagraphAlignment.Right;
         builder.Write("Page ");
-        builder.InsertField(Fields.FieldType.FieldPage, true);
+        builder.InsertField(FieldType.FieldPage, true);
         builder.Write(" of ");
-        builder.InsertField(Fields.FieldType.FieldNumPages, true);
+        builder.InsertField(FieldType.FieldNumPages, true);
     }
 }
