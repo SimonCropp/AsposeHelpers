@@ -13,13 +13,13 @@ public static partial class WordExtensions
         builder.Font.ClearFormatting();
     }
 
-    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int entryLevel, bool pageNumber = true) =>
-        InsertTocEntry(builder,  text, entryLevel.ToString(), pageNumber);
+    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int level, bool pageNumber = true) =>
+        InsertTocEntry(builder,  text, level.ToString(), pageNumber);
 
-    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string entryLevel, bool pageNumber = true)
+    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string level, bool pageNumber = true)
     {
         var field = (FieldTC) builder.InsertField(FieldType.FieldTOCEntry, true);
-        field.EntryLevel = entryLevel;
+        field.EntryLevel = level;
         field.OmitPageNumber = !pageNumber;
         field.Text = text;
         builder.Writeln();
