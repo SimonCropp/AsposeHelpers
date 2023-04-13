@@ -18,11 +18,14 @@ public static partial class WordExtensions
 
     public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string level, bool pageNumber = true)
     {
+        builder.Font.ClearFormatting();
+        builder.Font.Color = Color.White;
+        builder.Font.Size = 0;
         var field = (FieldTC) builder.InsertField(FieldType.FieldTOCEntry, true);
         field.EntryLevel = level;
         field.OmitPageNumber = !pageNumber;
         field.Text = text;
-        builder.Writeln();
+        builder.Font.ClearFormatting();
         return field;
     }
 
