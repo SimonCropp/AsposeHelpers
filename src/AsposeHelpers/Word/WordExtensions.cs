@@ -25,6 +25,7 @@ public static partial class WordExtensions
         field.EntryLevel = level;
         field.OmitPageNumber = !pageNumber;
         field.Text = text;
+        builder.Writeln();
         builder.Font.ClearFormatting();
         return field;
     }
