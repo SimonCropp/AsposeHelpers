@@ -28,11 +28,6 @@ public static partial class WordExtensions
 
     public static void AppendWord(this DocumentBuilder builder, Document document)
     {
-        var nestedBuilder = new DocumentBuilder(document);
-        var setup = nestedBuilder.PageSetup;
-        setup.PaperSize = builder.PageSetup.PaperSize;
-        nestedBuilder.SetMargins(0);
-
         for (var index = 0; index < document.PageCount; index++)
         {
             var options = new Saving.ImageSaveOptions(SaveFormat.Png)
