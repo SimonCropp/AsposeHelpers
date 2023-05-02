@@ -28,10 +28,6 @@ public static partial class WordExtensions
 
     public static void AppendWord(this DocumentBuilder builder, Document document)
     {
-        foreach (Section section in document.Sections)
-        {
-            section.HeadersFooters.Clear();
-        }
         var nestedBuilder = new DocumentBuilder(document);
         var setup = nestedBuilder.PageSetup;
         setup.PaperSize = builder.PageSetup.PaperSize;
