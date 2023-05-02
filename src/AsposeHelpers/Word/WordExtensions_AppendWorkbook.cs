@@ -1,4 +1,6 @@
 ﻿using Aspose.Cells;
+using Aspose.Words.Drawing;
+using ImageType = Aspose.Cells.Drawing.ImageType;
 
 namespace Aspose.Words;
 
@@ -27,17 +29,20 @@ public static partial class WordExtensions
             sheet.Cells.DeleteBlankRows();
             sheet.Cells.DeleteBlankColumns();
             book.Worksheets.ActiveSheetName = sheet.Name;
-            using var currentSheet = new MemoryStream();
+            using var imageStream = new MemoryStream();
 
             book.Save(
-                currentSheet,
-                new HtmlSaveOptions
+                imageStream,
+                new ImageSaveOptions
                 {
-                    ExportActiveWorksheetOnly = true,
-                    ExportGridLines = true,
+                    ImageOrPrintOptions =
+                    {
+                        ImageType = ImageType.Png
+                    }
                 });
-            var html = Encoding.UTF8.GetString(currentSheet.GetBuffer());
-            builder.InsertHtml(html);
+            var image = builder.InsertImage(imageStream);
+            image.WrapType = WrapType.Square;
+            image.Width *= .98;
 
             if (index < count - 1)
             {
