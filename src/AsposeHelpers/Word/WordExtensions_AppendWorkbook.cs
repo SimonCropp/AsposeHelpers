@@ -42,7 +42,6 @@ public static partial class WordExtensions
                 });
             var image = builder.InsertImage(imageStream);
             image.WrapType = WrapType.Square;
-            image.Width *= .98;
 
             if (index < count - 1)
             {

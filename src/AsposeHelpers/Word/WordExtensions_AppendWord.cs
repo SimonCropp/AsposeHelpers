@@ -39,7 +39,6 @@ public static partial class WordExtensions
             document.Save(imageStream, options);
             var image = builder.InsertImage(imageStream);
             image.WrapType = WrapType.Square;
-            image.Width *= .98;
             if (index < document.PageCount - 1)
             {
                 builder.InsertBreak(BreakType.PageBreak);
