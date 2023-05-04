@@ -41,7 +41,7 @@ public static partial class WordExtensions
             image.WrapType = WrapType.Square;
             if (index < document.PageCount - 1)
             {
-                builder.InsertBreak(BreakType.PageBreak);
+                builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
     }
