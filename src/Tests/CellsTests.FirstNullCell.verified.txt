@@ -1,6 +1,0 @@
-﻿{
-  Name: B1,
-  Row: 0,
-  Column: 1,
-  Type: IsNull
-}
