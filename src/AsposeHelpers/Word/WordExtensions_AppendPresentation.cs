@@ -45,7 +45,7 @@ public static partial class WordExtensions
             builder.InsertHtml(Encoding.UTF8.GetString(htmlStream.GetBuffer()));
             if (index < presentation.Slides.Count - 1)
             {
-                builder.InsertBreak(BreakType.PageBreak);
+                builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
     }

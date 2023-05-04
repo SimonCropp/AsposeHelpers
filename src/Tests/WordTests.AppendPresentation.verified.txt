@@ -22,11 +22,17 @@ Lorem ipsum
 
 ![](content.002.png)
 
+**Created with an evaluation copy of Aspose.Words. To discover the full versions of our APIs please visit: https://products.aspose.com/words/**
+![](content.001.png)
+
 ﻿ 
 
 Chart
 
 ![](content.003.png)
+
+**Created with an evaluation copy of Aspose.Words. To discover the full versions of our APIs please visit: https://products.aspose.com/words/**
+![](content.001.png)
 
 ﻿ 
 

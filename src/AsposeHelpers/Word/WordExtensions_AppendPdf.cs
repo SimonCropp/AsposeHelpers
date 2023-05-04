@@ -29,7 +29,7 @@ public static partial class WordExtensions
             image.WrapType = WrapType.Square;
             if (index < document.Pages.Count - 1)
             {
-                builder.InsertBreak(BreakType.PageBreak);
+                builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
     }

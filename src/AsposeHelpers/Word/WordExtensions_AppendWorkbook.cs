@@ -45,7 +45,7 @@ public static partial class WordExtensions
 
             if (index < count - 1)
             {
-                builder.InsertBreak(BreakType.PageBreak);
+                builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
     }
