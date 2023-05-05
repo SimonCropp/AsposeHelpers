@@ -21,10 +21,7 @@ public static partial class WordExtensions
     {
         for (var index = 0; index < document.Pages.Count; index++)
         {
-            var page = document.Pages[index + 1];
-            using var imageStream = new MemoryStream();
-            var pngDevice = new PngDevice();
-            pngDevice.Process(page, imageStream);
+            using var imageStream = ToImage(document, index);
             var image = builder.InsertImage(imageStream);
             image.WrapType = WrapType.Square;
             if (index < document.Pages.Count - 1)
@@ -32,5 +29,14 @@ public static partial class WordExtensions
                 builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
+    }
+
+    public static MemoryStream ToImage(this Pdf.Document document, int index)
+    {
+        var page = document.Pages[index + 1];
+        var stream = new MemoryStream();
+        var pngDevice = new PngDevice();
+        pngDevice.Process(page, stream);
+        return stream;
     }
 }

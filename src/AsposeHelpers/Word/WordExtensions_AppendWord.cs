@@ -30,13 +30,7 @@ public static partial class WordExtensions
     {
         for (var index = 0; index < document.PageCount; index++)
         {
-            var options = new Saving.ImageSaveOptions(SaveFormat.Png)
-            {
-                PageSet = new(index),
-                OptimizeOutput = true
-            };
-            using var imageStream = new MemoryStream();
-            document.Save(imageStream, options);
+            using var imageStream = ToImage(document, index);
             var image = builder.InsertImage(imageStream);
             image.WrapType = WrapType.Square;
             if (index < document.PageCount - 1)
@@ -44,5 +38,17 @@ public static partial class WordExtensions
                 builder.InsertBreak(BreakType.SectionBreakNewPage);
             }
         }
+    }
+
+    public static MemoryStream ToImage(this Document document, int page)
+    {
+        var options = new Saving.ImageSaveOptions(SaveFormat.Png)
+        {
+            PageSet = new(page),
+            OptimizeOutput = true
+        };
+        var stream = new MemoryStream();
+        document.Save(stream, options);
+        return stream;
     }
 }
