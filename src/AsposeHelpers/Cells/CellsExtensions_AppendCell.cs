@@ -5,6 +5,7 @@ public static partial class CellsExtensions
     public static Cell AppendCell(this Worksheet sheet, int row, string? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -12,7 +13,6 @@ public static partial class CellsExtensions
         }
 
         cell.PutValue(value);
-        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         return cell;
     }
 
