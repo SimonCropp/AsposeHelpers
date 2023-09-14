@@ -12,6 +12,7 @@ public static partial class CellsExtensions
         }
 
         cell.PutValue(value);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         return cell;
     }
 
@@ -20,9 +21,11 @@ public static partial class CellsExtensions
 
     public static Cell AppendCell(this Worksheet sheet, int row, int? value) =>
         sheet.AppendCell(row, value?.ToString());
+
     public static Cell AppendCell(this Worksheet sheet, int row, bool? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -36,6 +39,7 @@ public static partial class CellsExtensions
     public static Cell AppendCellHtml(this Worksheet sheet, int row, string? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -56,19 +60,21 @@ public static partial class CellsExtensions
     public static Cell AppendCell(this Worksheet sheet, int row, decimal? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
             return cell;
         }
 
-        cell.PutValue((double)value.Value);
+        cell.PutValue((double) value.Value);
         return cell;
     }
 
     public static Cell AppendCell(this Worksheet sheet, int row, Date? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -85,6 +91,7 @@ public static partial class CellsExtensions
     public static Cell AppendCell(this Worksheet sheet, int row, DateTimeOffset? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -101,6 +108,7 @@ public static partial class CellsExtensions
     public static Cell AppendCell(this Worksheet sheet, int row, DateTime? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.GetStyle().VerticalAlignment = TextAlignmentType.Top;
         if (value == null)
         {
             cell.PutValue("");
@@ -135,5 +143,4 @@ public static partial class CellsExtensions
 
         return "yyyy-MM-dd HH:mm:ss.FFFFFFF";
     }
-
 }
