@@ -16,6 +16,9 @@ public static partial class CellsExtensions
         return cell;
     }
 
+    public static Cell AppendCell(this Worksheet sheet, int row, IEnumerable<string> value) =>
+        sheet.AppendCell(row, string.Join(", ", value));
+
     public static Cell AppendCell(this Worksheet sheet, int row, Guid? value) =>
         sheet.AppendCell(row, value?.ToString());
 
