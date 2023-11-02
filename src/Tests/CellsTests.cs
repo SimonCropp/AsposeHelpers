@@ -60,6 +60,17 @@ public class CellsTests
     }
 
     [Test]
+    public async Task AppendCellDateTimeOffsetMinValue()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.AppendCell(0, DateTimeOffset.MinValue);
+        cell.SetColumnWidth(100);
+        await Verify(workbook);
+    }
+
+    [Test]
     public async Task AppendCellDate()
     {
         using var workbook = new Workbook();
@@ -71,12 +82,45 @@ public class CellsTests
     }
 
     [Test]
+    public async Task AppendCellDateMinValue()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.AppendCell(0, Date.MinValue);
+        cell.SetColumnWidth(100);
+        await Verify(workbook);
+    }
+
+    [Test]
     public async Task AppendCellDateTime()
     {
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
         var cell = sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3));
+        cell.SetColumnWidth(100);
+        await Verify(workbook);
+    }
+
+    [Test]
+    public async Task AppendCellDateTimeFormat()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3), "yyyy");
+        cell.SetColumnWidth(100);
+        await Verify(workbook);
+    }
+
+    [Test]
+    public async Task AppendCellDateTimeMinValue()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.AppendCell(0, DateTime.MinValue);
         cell.SetColumnWidth(100);
         await Verify(workbook);
     }

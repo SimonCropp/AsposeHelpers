@@ -70,7 +70,7 @@ public static partial class CellsExtensions
         return cell;
     }
 
-    public static Cell AppendCell(this Worksheet sheet, int row, Date? value)
+    public static Cell AppendCell(this Worksheet sheet, int row, Date? value, string? format = null)
     {
         var cell = sheet.FirstNullCell(row);
         if (value == null)
@@ -79,14 +79,10 @@ public static partial class CellsExtensions
             return cell;
         }
 
-        cell.PutValue(value.Value.ToDateTime(new(0)));
-        var style = cell.GetStyle();
-        style.Custom = "yyyy-MM-dd";
-        cell.SetStyle(style);
-        return cell;
+        return sheet.AppendCell(row, value.Value.ToDateTime(new(0)), format);
     }
 
-    public static Cell AppendCell(this Worksheet sheet, int row, DateTimeOffset? value)
+    public static Cell AppendCell(this Worksheet sheet, int row, DateTimeOffset? value, string? format = null)
     {
         var cell = sheet.FirstNullCell(row);
         if (value == null)
@@ -95,14 +91,10 @@ public static partial class CellsExtensions
             return cell;
         }
 
-        cell.PutValue(value.Value.DateTime);
-        var style = cell.GetStyle();
-        style.Custom = GetFormat(value.Value.DateTime);
-        cell.SetStyle(style);
-        return cell;
+        return sheet.AppendCell(row, value.Value.DateTime, format);
     }
 
-    public static Cell AppendCell(this Worksheet sheet, int row, DateTime? value)
+    public static Cell AppendCell(this Worksheet sheet, int row, DateTime? value, string? format = null)
     {
         var cell = sheet.FirstNullCell(row);
         if (value == null)
@@ -112,16 +104,27 @@ public static partial class CellsExtensions
         }
 
         var dateTime = value.Value;
+        if (dateTime == DateTime.MinValue)
+        {
+            cell.PutValue("");
+            return cell;
+        }
+
         cell.PutValue(dateTime);
         var style = cell.GetStyle();
-        style.Custom = GetFormat(dateTime);
+        style.Custom = GetFormat(dateTime, format);
 
         cell.SetStyle(style);
         return cell;
     }
 
-    static string GetFormat(DateTime value)
+    static string GetFormat(DateTime value, string? format)
     {
+        if (format != null)
+        {
+            return format;
+        }
+
         if (value.TimeOfDay == TimeSpan.Zero)
         {
             return "yyyy-MM-dd";
