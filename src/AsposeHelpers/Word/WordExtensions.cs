@@ -13,6 +13,13 @@ public static partial class WordExtensions
         builder.Font.ClearFormatting();
     }
 
+    public static void ClearFormatting(this DocumentBuilder builder)
+    {
+        builder.Font.ClearFormatting();
+        builder.ParagraphFormat.ClearFormatting();
+        builder.Font.Border.ClearFormatting();
+    }
+
     public static void WriteLn(this DocumentBuilder builder, char line) =>
         builder.Writeln(line.ToString());
 
