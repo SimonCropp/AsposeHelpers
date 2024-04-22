@@ -13,6 +13,12 @@ public static partial class WordExtensions
         builder.Font.ClearFormatting();
     }
 
+    public static void WriteLn(this DocumentBuilder builder, char line) =>
+        builder.Writeln(line.ToString());
+
+    public static void Write(this DocumentBuilder builder, char line) =>
+        builder.Write(line.ToString());
+
     public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int level, bool pageNumber = true) =>
         InsertTocEntry(builder,  text, level.ToString(), pageNumber);
 
