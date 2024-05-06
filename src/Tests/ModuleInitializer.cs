@@ -7,5 +7,6 @@
         VerifyDiffPlex.Initialize();
         VerifyImageMagick.RegisterComparers(.05);
         VerifierSettings.IgnoreMember("Width");
+        VerifierSettings.ScrubLinesContaining("evaluation", "License");
     }
 }
