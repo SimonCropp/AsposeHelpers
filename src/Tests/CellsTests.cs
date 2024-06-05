@@ -4,6 +4,34 @@ using Aspose.Cells;
 public class CellsTests
 {
     [Test]
+    public async Task CellAlignment()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.Cells["A1"];
+        cell.PutValue("Hello World!");
+
+        cell.AlignRight();
+        cell.AlignTop();
+        await Verify(cell.GetStyle());
+    }
+
+    [Test]
+    public async Task SheetAlignment()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.Cells["A1"];
+        cell.PutValue("Hello World!");
+
+        sheet.AlignRight();
+        sheet.AlignTop();
+        await Verify(cell.GetStyle());
+    }
+
+    [Test]
     public async Task MakeHeadingsBoldSheet()
     {
         using var workbook = new Workbook();
@@ -12,7 +40,7 @@ public class CellsTests
         var cell = sheet.Cells["A1"];
         cell.PutValue("Hello World!");
         sheet.MakeHeadingsBold();
-        await Verify(workbook);
+        await Verify(cell.GetStyle());
     }
 
     [Test]
@@ -24,7 +52,7 @@ public class CellsTests
         var cell = sheet.Cells["A1"];
         cell.PutValue("Hello World!");
         workbook.MakeHeadingsBold();
-        await Verify(workbook);
+        await Verify(cell.GetStyle());
     }
 
     [Test]
@@ -166,7 +194,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, (decimal) 10);
+        var cell = sheet.AppendCell(0, (decimal)10);
         cell.SetColumnWidth(100);
         await Verify(workbook);
     }
