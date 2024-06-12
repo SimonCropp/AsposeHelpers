@@ -5,7 +5,7 @@
     {
         VerifyAspose.Initialize();
         VerifyDiffPlex.Initialize();
-        VerifyImageMagick.RegisterComparers(.05);
+        VerifyImageMagick.RegisterComparers(.01);
         VerifierSettings.IgnoreMember("Width");
         VerifierSettings.ScrubLinesContaining("evaluation", "License");
     }
