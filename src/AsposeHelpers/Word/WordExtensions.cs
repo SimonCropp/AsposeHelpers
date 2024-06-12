@@ -22,11 +22,55 @@ public static partial class WordExtensions
         builder.Font.Border.ClearFormatting();
     }
 
-    public static void WriteLn(this DocumentBuilder builder, char line) =>
+    public static void WriteLine(this DocumentBuilder builder, char line) =>
         builder.Writeln(line.ToString());
 
-    public static void Write(this DocumentBuilder builder, char line) =>
-        builder.Write(line.ToString());
+    public static void WriteBoldLine(this DocumentBuilder builder, string line)
+    {
+        builder.Bold = true;
+        builder.Writeln(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void WriteItalicLine(this DocumentBuilder builder, string line)
+    {
+        builder.Italic = true;
+        builder.Writeln(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void WriteBoldItalicLine(this DocumentBuilder builder, string line)
+    {
+        builder.Bold = true;
+        builder.Italic = true;
+        builder.Writeln(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void WriteBold(this DocumentBuilder builder, string line)
+    {
+        builder.Bold = true;
+        builder.Write(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void WriteItalic(this DocumentBuilder builder, string line)
+    {
+        builder.Italic = true;
+        builder.Write(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void WriteBoldItalic(this DocumentBuilder builder, string line)
+    {
+        builder.Bold = true;
+        builder.Italic = true;
+        builder.Write(line);
+        builder.Font.ClearFormatting();
+    }
+
+    public static void Write(this DocumentBuilder builder, char ch) =>
+        builder.Write(ch.ToString());
 
     public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int level, bool pageNumber = true) =>
         InsertTocEntry(builder,  text, level.ToString(), pageNumber);

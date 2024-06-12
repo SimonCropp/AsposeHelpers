@@ -86,6 +86,24 @@ public class WordTests
     }
 
     [Test]
+    public Task WriteBoldItalic()
+    {
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        builder.WriteBold("Bold");
+        builder.WriteItalic("Italic");
+        builder.WriteBoldItalic("BoldItalic");
+        builder.Writeln();
+        builder.WriteBoldLine("BoldLine");
+        builder.WriteItalicLine("ItalicLine");
+        builder.WriteBoldItalicLine("BoldItalicLine");
+
+        return Verify(builder.Document);
+    }
+
+    [Test]
     public Task WriteNamedStyle()
     {
         var document = new Document();
