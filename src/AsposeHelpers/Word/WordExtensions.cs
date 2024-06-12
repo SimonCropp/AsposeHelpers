@@ -15,6 +15,8 @@ public static partial class WordExtensions
 
     public static void ClearFormatting(this DocumentBuilder builder)
     {
+        builder.Bold = false;
+        builder.Italic = false;
         builder.Font.ClearFormatting();
         builder.ParagraphFormat.ClearFormatting();
         builder.Font.Border.ClearFormatting();
