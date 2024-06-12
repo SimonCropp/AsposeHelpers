@@ -86,6 +86,24 @@ public class WordTests
     }
 
     [Test]
+    public Task WriteNamedStyle()
+    {
+        var document = new Document();
+
+        var style = document.Styles.Add(StyleType.Paragraph, "MyStyle");
+        style.Font.Size = 24;
+        style.Font.Name = "Verdana";
+        style.ParagraphFormat.SpaceAfter = 12;
+        var documentBuilder = new DocumentBuilder(document);
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        documentBuilder.WriteStyled("the text", "MyStyle");
+
+        return Verify(documentBuilder.Document);
+    }
+
+    [Test]
     public Task ModifyStyles()
     {
         var documentBuilder = new DocumentBuilder();

@@ -80,6 +80,24 @@ public static partial class WordExtensions
         pageSetup.FooterDistance = margin;
     }
 
+    public static void WriteStyled(this DocumentBuilder builder, string text, string styleName)
+    {
+        var styles = builder.Document
+            .Styles
+            .Where(_=>_.Type == StyleType.Paragraph)
+            .ToList();
+
+        var style = styles.SingleOrDefault(_ => _.Name == styleName);
+        if (style == null)
+        {
+            throw new($"Could not find paragraph {styleName}. Available styles: {string.Join(", ", styles.Select(_ => _.Name))}");
+        }
+
+        builder.ParagraphFormat.Style = style;
+        builder.Writeln(text);
+        builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+    }
+
     public static void WriteStyled(this DocumentBuilder builder, string text, StyleIdentifier style)
     {
         builder.ParagraphFormat.StyleIdentifier = style;

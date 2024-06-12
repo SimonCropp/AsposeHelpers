@@ -1,0 +1,21 @@
+﻿{
+  HasRevisions: False,
+  DefaultLocale: EnglishUS,
+  Properties: {
+    HeadingPairs: [
+      Title,
+      1
+    ],
+    Lines: 1,
+    Pages: 1,
+    Paragraphs: 1,
+    RevisionNumber: 1
+  },
+  Text:
+![](content.001.png)
+
+
+the text
+
+
+}
