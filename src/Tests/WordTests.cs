@@ -104,6 +104,31 @@ public class WordTests
     }
 
     [Test]
+    public Task UseBoldItalic()
+    {
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        using (builder.UseBold())
+        {
+            builder.Writeln("Bold");
+        }
+
+        using (builder.UseItalic())
+        {
+            builder.Writeln("Italic");
+        }
+
+        using (builder.UseBoldItalic())
+        {
+            builder.Writeln("BoldItalic");
+        }
+
+        return Verify(builder.Document);
+    }
+
+    [Test]
     public Task WriteNamedStyle()
     {
         var document = new Document();

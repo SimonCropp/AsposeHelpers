@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics.Contracts;
+using System.Drawing;
 using Aspose.Words.Fields;
 
 namespace Aspose.Words;
@@ -67,6 +68,28 @@ public static partial class WordExtensions
         builder.Italic = true;
         builder.Write(line);
         builder.Font.ClearFormatting();
+    }
+
+    [Pure]
+    public static IDisposable UseBold(this DocumentBuilder builder)
+    {
+        builder.Bold = true;
+        return new FontClearFormattingDisposable(builder);
+    }
+
+    [Pure]
+    public static IDisposable UseItalic(this DocumentBuilder builder)
+    {
+        builder.Italic = true;
+        return new FontClearFormattingDisposable(builder);
+    }
+
+    [Pure]
+    public static IDisposable UseBoldItalic(this DocumentBuilder builder)
+    {
+        builder.Bold = true;
+        builder.Italic = true;
+        return new FontClearFormattingDisposable(builder);
     }
 
     public static void Write(this DocumentBuilder builder, char ch) =>
@@ -167,4 +190,11 @@ public static partial class WordExtensions
         builder.Write(" of ");
         builder.InsertField(FieldType.FieldNumPages, true);
     }
+}
+
+class FontClearFormattingDisposable(DocumentBuilder builder) :
+    IDisposable
+{
+    public void Dispose() =>
+        builder.Font.ClearFormatting();
 }
