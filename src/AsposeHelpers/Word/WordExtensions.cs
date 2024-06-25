@@ -163,7 +163,7 @@ public static partial class WordExtensions
         builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
     }
 
-    static Style? FindStyle(DocumentBuilder builder, string styleName)
+    public static Style FindStyle(this DocumentBuilder builder, string styleName)
     {
         var styles = builder.Document
             .Styles
