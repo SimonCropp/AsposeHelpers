@@ -70,6 +70,23 @@ public class WordTests
     }
 
     [Test]
+    public Task TableAssignStyle()
+    {
+        var document = new Document();
+
+        AddTableStyle(document);
+        var builder = new DocumentBuilder(document);
+        var table = builder.StartTable();
+        builder.InsertCell();
+        table.AssignStyle("MyStyle");
+        builder.Write("Row 1, cell 1.");
+        builder.EndRow();
+        builder.EndTable();
+
+        return Verify(document);
+    }
+
+    [Test]
     public Task WriteH1()
     {
         var documentBuilder = new DocumentBuilder();
@@ -133,7 +150,7 @@ public class WordTests
     {
         var document = new Document();
 
-        AddStyle(document);
+        AddParagraphStyle(document);
         var documentBuilder = new DocumentBuilder(document);
         var pageSetup = documentBuilder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
@@ -148,7 +165,7 @@ public class WordTests
     {
         var document = new Document();
 
-        AddStyle(document);
+        AddParagraphStyle(document);
         var documentBuilder = new DocumentBuilder(document);
         var pageSetup = documentBuilder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
@@ -163,7 +180,15 @@ public class WordTests
         return Verify(documentBuilder.Document);
     }
 
-    static void AddStyle(Document document)
+    static void AddTableStyle(Document document)
+    {
+        var style = document.Styles.Add(StyleType.Table, "MyStyle");
+        style.Font.Size = 24;
+        style.Font.Name = "Verdana";
+        style.ParagraphFormat.SpaceAfter = 12;
+    }
+
+    static void AddParagraphStyle(Document document)
     {
         var style = document.Styles.Add(StyleType.Paragraph, "MyStyle");
         style.Font.Size = 24;

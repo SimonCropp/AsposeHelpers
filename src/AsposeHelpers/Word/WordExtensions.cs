@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Drawing;
 using Aspose.Words.Fields;
+using Aspose.Words.Tables;
 
 namespace Aspose.Words;
 
@@ -73,7 +74,7 @@ public static partial class WordExtensions
     [Pure]
     public static IDisposable UseStyled(this DocumentBuilder builder, string name)
     {
-        builder.ParagraphFormat.Style = FindStyle(builder, name);
+        builder.ParagraphFormat.Style = FindParagraphStyle(builder, name);
         return new ClearStyleDisposable(builder);
     }
 
@@ -103,14 +104,14 @@ public static partial class WordExtensions
         builder.Write(ch.ToString());
 
     public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int level, bool pageNumber = true) =>
-        InsertTocEntry(builder,  text, level.ToString(), pageNumber);
+        InsertTocEntry(builder, text, level.ToString(), pageNumber);
 
     public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string level, bool pageNumber = true)
     {
         builder.Font.ClearFormatting();
         builder.Font.Color = Color.White;
         builder.Font.Size = 0;
-        var field = (FieldTC) builder.InsertField(FieldType.FieldTOCEntry, true);
+        var field = (FieldTC)builder.InsertField(FieldType.FieldTOCEntry, true);
         field.EntryLevel = level;
         field.OmitPageNumber = !pageNumber;
         field.Text = text;
@@ -156,24 +157,75 @@ public static partial class WordExtensions
 
     public static void WriteStyled(this DocumentBuilder builder, string text, string styleName)
     {
-        var style = FindStyle(builder, styleName);
+        var style = FindParagraphStyle(builder, styleName);
 
         builder.ParagraphFormat.Style = style;
         builder.Writeln(text);
         builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
     }
 
-    public static Style FindStyle(this DocumentBuilder builder, string styleName)
-    {
-        var styles = builder.Document
-            .Styles
-            .Where(_=>_.Type == StyleType.Paragraph)
-            .ToList();
+    public static void AssignStyle(this Table table, string name) =>
+        table.Style = table.Document.FindStyle(name, StyleType.Table);
 
-        var style = styles.SingleOrDefault(_ => _.Name == styleName);
+    public static Style FindCharacterStyle(this DocumentBuilder builder, string name) =>
+        FindStyle(builder
+            .Document, name, StyleType.Character);
+
+    public static Style FindCharacterStyle(this DocumentBase document, string name) =>
+        FindStyle(document, name, StyleType.Character);
+
+    public static Style FindTableStyle(this DocumentBuilder builder, string name) =>
+        FindStyle(builder
+            .Document, name, StyleType.Table);
+
+    public static Style FindTableStyle(this DocumentBase document, string name) =>
+        FindStyle(document, name, StyleType.Table);
+
+    public static Style FindListStyle(this DocumentBuilder builder, string name) =>
+        FindStyle(builder
+            .Document, name, StyleType.List);
+
+    public static Style FindListStyle(this DocumentBase document, string name) =>
+        FindStyle(document, name, StyleType.List);
+
+    public static Style FindParagraphStyle(this DocumentBuilder builder, string name) =>
+        FindStyle(builder
+            .Document, name, StyleType.Paragraph);
+
+    public static Style FindParagraphStyle(this DocumentBase document, string name) =>
+        FindStyle(document, name, StyleType.Paragraph);
+
+    public static Style FindStyle(this DocumentBuilder builder, string name, StyleType? type = null) =>
+        FindStyle(builder
+            .Document, name, type);
+
+    public static Style FindStyle(this DocumentBase document, string name, StyleType? type)
+    {
+        List<Style> styles;
+        var available = document
+            .Styles;
+        if (type == null)
+        {
+            styles = available
+                .ToList();
+        }
+        else
+        {
+            styles = available
+                .Where(_ => _.Type == type)
+                .ToList();
+        }
+
+        var style = styles.SingleOrDefault(_ => _.Name == name);
         if (style == null)
         {
-            throw new($"Could not find paragraph {styleName}. Available styles: {string.Join(", ", styles.Select(_ => _.Name))}");
+            var names = string.Join(", ", styles.Select(_ => _.Name));
+            if (type == null)
+            {
+                throw new($"Could not find style '{name}'. Available styles: {names}");
+            }
+
+            throw new($"Could not find {type} style '{name}'. Available styles: {names}");
         }
 
         return style;
