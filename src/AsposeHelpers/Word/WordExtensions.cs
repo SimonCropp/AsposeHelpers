@@ -71,6 +71,14 @@ public static partial class WordExtensions
     }
 
     [Pure]
+    public static IDisposable UseStyled(this DocumentBuilder builder, string name)
+    {
+        builder.ParagraphFormat.Style = FindStyle(builder, name);
+        builder.Bold = true;
+        return new ClearStyleDisposable(builder);
+    }
+
+    [Pure]
     public static IDisposable UseBold(this DocumentBuilder builder)
     {
         builder.Bold = true;
@@ -149,6 +157,15 @@ public static partial class WordExtensions
 
     public static void WriteStyled(this DocumentBuilder builder, string text, string styleName)
     {
+        var style = FindStyle(builder, styleName);
+
+        builder.ParagraphFormat.Style = style;
+        builder.Writeln(text);
+        builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+    }
+
+    static Style? FindStyle(DocumentBuilder builder, string styleName)
+    {
         var styles = builder.Document
             .Styles
             .Where(_=>_.Type == StyleType.Paragraph)
@@ -160,9 +177,7 @@ public static partial class WordExtensions
             throw new($"Could not find paragraph {styleName}. Available styles: {string.Join(", ", styles.Select(_ => _.Name))}");
         }
 
-        builder.ParagraphFormat.Style = style;
-        builder.Writeln(text);
-        builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+        return style;
     }
 
     public static void WriteStyled(this DocumentBuilder builder, string text, StyleIdentifier style)
@@ -190,11 +205,4 @@ public static partial class WordExtensions
         builder.Write(" of ");
         builder.InsertField(FieldType.FieldNumPages, true);
     }
-}
-
-class FontClearFormattingDisposable(DocumentBuilder builder) :
-    IDisposable
-{
-    public void Dispose() =>
-        builder.Font.ClearFormatting();
 }

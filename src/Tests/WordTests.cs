@@ -133,10 +133,7 @@ public class WordTests
     {
         var document = new Document();
 
-        var style = document.Styles.Add(StyleType.Paragraph, "MyStyle");
-        style.Font.Size = 24;
-        style.Font.Name = "Verdana";
-        style.ParagraphFormat.SpaceAfter = 12;
+        AddStyle(document);
         var documentBuilder = new DocumentBuilder(document);
         var pageSetup = documentBuilder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
@@ -144,6 +141,34 @@ public class WordTests
         documentBuilder.WriteStyled("the text", "MyStyle");
 
         return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public Task UseStyled()
+    {
+        var document = new Document();
+
+        AddStyle(document);
+        var documentBuilder = new DocumentBuilder(document);
+        var pageSetup = documentBuilder.PageSetup;
+        pageSetup.PaperSize = PaperSize.A5;
+
+        documentBuilder.Writeln("one");
+        using (documentBuilder.UseStyled("MyStyle"))
+        {
+            documentBuilder.Writeln("two");
+        }
+
+        documentBuilder.Writeln("three");
+        return Verify(documentBuilder.Document);
+    }
+
+    static void AddStyle(Document document)
+    {
+        var style = document.Styles.Add(StyleType.Paragraph, "MyStyle");
+        style.Font.Size = 24;
+        style.Font.Name = "Verdana";
+        style.ParagraphFormat.SpaceAfter = 12;
     }
 
     [Test]
