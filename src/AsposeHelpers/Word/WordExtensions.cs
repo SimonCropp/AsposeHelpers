@@ -74,7 +74,6 @@ public static partial class WordExtensions
     public static IDisposable UseStyled(this DocumentBuilder builder, string name)
     {
         builder.ParagraphFormat.Style = FindStyle(builder, name);
-        builder.Bold = true;
         return new ClearStyleDisposable(builder);
     }
 

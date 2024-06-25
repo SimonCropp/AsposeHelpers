@@ -17,7 +17,7 @@
 
 one
 
-**two**
+two
 
 three
 
