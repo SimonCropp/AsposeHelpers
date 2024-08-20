@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Argon" />
+    <PackageReference Include="Aspose.Pdf" />
     <PackageReference Include="MarkdownSnippets.MsBuild" PrivateAssets="all" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
