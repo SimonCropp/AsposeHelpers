@@ -217,18 +217,18 @@ public static partial class WordExtensions
         }
 
         var style = styles.SingleOrDefault(_ => _.Name == name);
-        if (style == null)
+        if (style != null)
         {
-            var names = string.Join(", ", styles.Select(_ => _.Name));
-            if (type == null)
-            {
-                throw new($"Could not find style '{name}'. Available styles: {names}");
-            }
-
-            throw new($"Could not find {type} style '{name}'. Available styles: {names}");
+            return style;
         }
 
-        return style;
+        var names = string.Join(", ", styles.Select(_ => _.Name));
+        if (type == null)
+        {
+            throw new($"Could not find style '{name}'. Available styles: {names}");
+        }
+
+        throw new($"Could not find {type} style '{name}'. Available styles: {names}");
     }
 
     public static void WriteStyled(this DocumentBuilder builder, string text, StyleIdentifier style)
