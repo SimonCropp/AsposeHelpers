@@ -40,20 +40,24 @@ public static partial class CellsExtensions
     public static Cell AppendCellHtml(this Worksheet sheet, int row, string? value)
     {
         var cell = sheet.FirstNullCell(row);
+        cell.SafeSetHtml(value);
+        return cell;
+    }
+
+    public static void SafeSetHtml(this Cell cell, string? value)
+    {
         if (value == null)
         {
             cell.PutValue("");
-            return cell;
         }
 
         try
         {
             cell.HtmlString = value;
-            return cell;
         }
-        catch (Exception exception)
+        catch
         {
-            throw new($"Unable to set html. Html: {value}", exception);
+            cell.Value = value;
         }
     }
 

@@ -1,0 +1,41 @@
+﻿{
+  Borders: {
+    DiagonalColor: Black
+  },
+  HasBorders: false,
+  IsNumberFormatApplied: false,
+  IsFontApplied: false,
+  IsAlignmentApplied: false,
+  IsBorderApplied: false,
+  IsFillApplied: false,
+  IsProtectionApplied: false,
+  Font: {
+    IsItalic: false,
+    IsBold: false,
+    StrikeType: None,
+    IsStrikeout: false,
+    IsSuperscript: false,
+    IsSubscript: false,
+    Name: Arial,
+    DoubleSize: 10.0,
+    Size: 10,
+    ThemeColor: {
+      ColorType: Text1
+    },
+    Color: 0, 0, 0,
+    ArgbColor: -16777216,
+    IsNormalizeHeights: false
+  },
+  HorizontalAlignment: General,
+  VerticalAlignment: Center,
+  IsTextWrapped: false,
+  IsLocked: true,
+  Custom: ,
+  IsFormulaHidden: false,
+  ShrinkToFit: false,
+  IsJustifyDistributed: false,
+  QuotePrefix: false,
+  IsGradient: false,
+  IsPercent: false,
+  IsDateTime: false
+}

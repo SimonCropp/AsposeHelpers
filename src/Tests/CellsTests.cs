@@ -18,6 +18,18 @@ public class CellsTests
     }
 
     [Test]
+    public async Task SetColumnWidth()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        var cell = sheet.Cells["A1"];
+        cell.PutValue("Hello World!");
+        cell.SetColumnWidth(10);
+        await Verify(cell.GetStyle());
+    }
+
+    [Test]
     public async Task SheetAlignment()
     {
         using var workbook = new Workbook();
@@ -82,8 +94,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, new DateTimeOffset(new(2020, 10, 7, 1, 2, 3)));
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, new DateTimeOffset(new(2020, 10, 7, 1, 2, 3)));
         await Verify(workbook);
     }
 
@@ -93,8 +104,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, DateTimeOffset.MinValue);
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, DateTimeOffset.MinValue);
         await Verify(workbook);
     }
 
@@ -104,8 +114,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, new Date(2020, 10, 7));
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, new Date(2020, 10, 7));
         await Verify(workbook);
     }
 
@@ -115,8 +124,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, Date.MinValue);
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, Date.MinValue);
         await Verify(workbook);
     }
 
@@ -126,8 +134,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3));
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3));
         await Verify(workbook);
     }
 
@@ -137,8 +144,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3), "yyyy");
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3), "yyyy");
         await Verify(workbook);
     }
 
@@ -148,8 +154,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, DateTime.MinValue);
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, DateTime.MinValue);
         await Verify(workbook);
     }
 
@@ -159,8 +164,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, 1);
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, 1);
         await Verify(workbook);
     }
 
@@ -170,9 +174,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, Guid.Empty);
-        cell.SetColumnWidth(200);
-        cell.AlignRight();
+        sheet.AppendCell(0, Guid.Empty);
         await Verify(workbook);
     }
 
@@ -182,9 +184,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, "The value");
-        cell.SetColumnWidth(100);
-        cell.AlignRight();
+        sheet.AppendCell(0, "The value");
         await Verify(workbook);
     }
 
@@ -194,8 +194,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, (decimal)10);
-        cell.SetColumnWidth(100);
+        sheet.AppendCell(0, (decimal)10);
         await Verify(workbook);
     }
 
@@ -205,9 +204,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCell(0, true);
-        cell.SetColumnWidth(100);
-        cell.AlignRight();
+        sheet.AppendCell(0, true);
         await Verify(workbook);
     }
 
@@ -217,9 +214,17 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell = sheet.AppendCellHtml(0, "<b>the value</b>");
-        cell.SetColumnWidth(100);
-        cell.AlignRight();
+        sheet.AppendCellHtml(0, "<b>the value</b>");
+        await Verify(workbook);
+    }
+
+    [Test]
+    public async Task AppendCellHtml_NestedBug()
+    {
+        using var workbook = new Workbook();
+
+        var sheet = workbook.Worksheets[0];
+        sheet.AppendCellHtml(0, "<div> <div>AAA</div> </div>");
         await Verify(workbook);
     }
 }
