@@ -2,6 +2,13 @@ namespace Aspose.Cells;
 
 public static partial class CellsExtensions
 {
+    public static Cell AppendLinkCell(this Worksheet sheet, int row, string link, string? text)
+    {
+        var cell = AppendCell(sheet, row, text ?? link);
+        sheet.Hyperlinks.Add(cell.Row,cell.Column, 1, 1, link);
+        return cell;
+    }
+
     public static Cell AppendCell(this Worksheet sheet, int row, string? value)
     {
         var cell = sheet.FirstNullCell(row);

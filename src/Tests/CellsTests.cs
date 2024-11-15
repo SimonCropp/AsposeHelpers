@@ -84,7 +84,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AddColumn("Hello World!");
+        sheet.AddColumn("Hello World1", 100);
+        sheet.AddColumn("Hello World2", 100);
         await Verify(workbook);
     }
 
@@ -94,7 +95,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, new DateTimeOffset(new(2020, 10, 7, 1, 2, 3)));
+        var cell = sheet.AppendCell(1, new DateTimeOffset(new(2020, 10, 7, 1, 2, 3)));
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -104,7 +106,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, DateTimeOffset.MinValue);
+        var cell = sheet.AppendCell(1, DateTimeOffset.MinValue);
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -114,7 +117,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, new Date(2020, 10, 7));
+        var cell =   sheet.AppendCell(1, new Date(2020, 10, 7));
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -124,7 +128,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, Date.MinValue);
+        var cell =   sheet.AppendCell(1, Date.MinValue);
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -134,7 +139,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3));
+        var cell =   sheet.AppendCell(1, new DateTime(2020, 10, 7, 1, 2, 3));
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -144,7 +150,8 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, new DateTime(2020, 10, 7, 1, 2, 3), "yyyy");
+        var cell = sheet.AppendCell(1, new DateTime(2020, 10, 7, 1, 2, 3), "yyyy");
+        cell.SetColumnWidth(50);
         await Verify(workbook);
     }
 
@@ -154,7 +161,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, DateTime.MinValue);
+        sheet.AppendCell(1, DateTime.MinValue);
         await Verify(workbook);
     }
 
@@ -164,7 +171,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, 1);
+        sheet.AppendCell(1, 1);
         await Verify(workbook);
     }
 
@@ -174,57 +181,77 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, Guid.Empty);
+        sheet.AppendCell(1, Guid.Empty);
         await Verify(workbook);
     }
 
     [Test]
     public async Task AppendCellString()
     {
-        using var workbook = new Workbook();
+        using var book = new Workbook();
 
-        var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, "The value");
-        await Verify(workbook);
+        var sheet = book.Worksheets[0];
+        sheet.AppendCell(1, "The value");
+        await Verify(book);
+    }
+
+    [Test]
+    public async Task AppendLinkCell()
+    {
+        using var book = new Workbook();
+
+        var sheet = book.Worksheets[0];
+        sheet.AppendLinkCell(1, "https://google.com", "The value");
+        await Verify(book);
+    }
+
+    [Test]
+    public async Task AppendLinkCellWithText()
+    {
+        using var book = new Workbook();
+
+        var sheet = book.Worksheets[0];
+        sheet.AppendLinkCell(1, "https://google.com", "The value");
+        await Verify(book);
     }
 
     [Test]
     public async Task AppendCellDecimal()
     {
-        using var workbook = new Workbook();
+        using var book = new Workbook();
 
-        var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, (decimal)10);
-        await Verify(workbook);
+        var sheet = book.Worksheets[0];
+        sheet.AppendCell(1, (decimal)10);
+        await Verify(book);
     }
 
     [Test]
     public async Task AppendCellBool()
     {
-        using var workbook = new Workbook();
+        using var book = new Workbook();
 
-        var sheet = workbook.Worksheets[0];
-        sheet.AppendCell(0, true);
-        await Verify(workbook);
+        var sheet = book.Worksheets[0];
+        sheet.AppendCell(1, true);
+        await Verify(book);
     }
 
     [Test]
     public async Task AppendCellHtml()
     {
-        using var workbook = new Workbook();
+        using var book = new Workbook();
 
-        var sheet = workbook.Worksheets[0];
-        sheet.AppendCellHtml(0, "<b>the value</b>");
-        await Verify(workbook);
+        var sheet = book.Worksheets[0];
+        sheet.AppendCellHtml(1, "<b>the value</b>");
+        await Verify(book);
     }
 
     [Test]
     public async Task AppendCellHtml_NestedBug()
     {
-        using var workbook = new Workbook();
+        using var book = new Workbook();
 
-        var sheet = workbook.Worksheets[0];
-        sheet.AppendCellHtml(0, "<div> <div>AAA</div> </div>");
-        await Verify(workbook);
+        var sheet = book.Worksheets[0];
+        sheet.AppendCellHtml(1, "<div> <div>AAA</div> </div>");
+        await Verify(book);
     }
 }
