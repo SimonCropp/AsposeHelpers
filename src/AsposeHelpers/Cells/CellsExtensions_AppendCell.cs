@@ -56,6 +56,7 @@ public static partial class CellsExtensions
         if (value == null)
         {
             cell.PutValue("");
+            return;
         }
 
         try

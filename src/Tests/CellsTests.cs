@@ -1,4 +1,5 @@
 using Aspose.Cells;
+using NUnit.Framework.Legacy;
 
 [TestFixture]
 public class CellsTests
@@ -117,7 +118,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell =   sheet.AppendCell(1, new Date(2020, 10, 7));
+        var cell = sheet.AppendCell(1, new Date(2020, 10, 7));
         cell.SetColumnWidth(50);
         await Verify(workbook);
     }
@@ -128,7 +129,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell =   sheet.AppendCell(1, Date.MinValue);
+        var cell = sheet.AppendCell(1, Date.MinValue);
         cell.SetColumnWidth(50);
         await Verify(workbook);
     }
@@ -139,7 +140,7 @@ public class CellsTests
         using var workbook = new Workbook();
 
         var sheet = workbook.Worksheets[0];
-        var cell =   sheet.AppendCell(1, new DateTime(2020, 10, 7, 1, 2, 3));
+        var cell = sheet.AppendCell(1, new DateTime(2020, 10, 7, 1, 2, 3));
         cell.SetColumnWidth(50);
         await Verify(workbook);
     }
@@ -241,7 +242,19 @@ public class CellsTests
         using var book = new Workbook();
 
         var sheet = book.Worksheets[0];
-        sheet.AppendCellHtml(1, "<b>the value</b>");
+        var cell = sheet.AppendCellHtml(1, "<b>the value</b>");
+        ClassicAssert.AreNotEqual(cell, sheet.FirstNullCell(1));
+        await Verify(book);
+    }
+
+    [Test]
+    public async Task AppendCellHtml_Null()
+    {
+        using var book = new Workbook();
+
+        var sheet = book.Worksheets[0];
+        var cell = sheet.AppendCellHtml(1, null);
+        ClassicAssert.AreNotEqual(cell, sheet.FirstNullCell(1));
         await Verify(book);
     }
 
