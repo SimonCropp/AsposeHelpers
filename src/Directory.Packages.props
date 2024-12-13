@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Argon" Version="0.25.0" />
+    <PackageVersion Include="Argon" Version="0.26.0" />
     <PackageVersion Include="Aspose.Cells" Version="24.12.0" />
     <PackageVersion Include="Aspose.Email" Version="24.11.0" />
     <PackageVersion Include="Aspose.Pdf" Version="24.11.0" />
@@ -18,7 +18,7 @@
     <PackageVersion Include="Verify.Aspose" Version="5.7.0" />
     <PackageVersion Include="Verify.DiffPlex" Version="3.1.2" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.6.0" />
-    <PackageVersion Include="Verify.NUnit" Version="28.4.0" />
+    <PackageVersion Include="Verify.NUnit" Version="28.5.0" />
     <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
   </ItemGroup>
 </Project>
