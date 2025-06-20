@@ -229,9 +229,7 @@ public class WordTests
         #region ModifyStyleFonts
 
         document.ModifyStyleFonts(_ =>
-        {
-            _.Italic = false;
-        });
+            _.Italic = false);
 
         #endregion
 
