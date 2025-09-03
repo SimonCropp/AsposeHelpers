@@ -18,11 +18,12 @@ public static partial class CellsExtensions
 
         var cell = cells[0, column];
         cell.PutValue(heading);
-        var style = cell.GetStyle();
-        style.VerticalAlignment = TextAlignmentType.Top;
-        modifyStyle?.Invoke(style);
-
-        cell.SetStyle(style);
+        if (modifyStyle != null)
+        {
+            var style = cell.GetStyle();
+            modifyStyle(style);
+            cell.SetStyle(style);
+        }
 
         if (width == null)
         {
