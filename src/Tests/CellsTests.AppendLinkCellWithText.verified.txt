@@ -6,8 +6,17 @@
     {
       Name: Sheet1,
       Columns: [
+        {}
+      ],
+      Hyperlinks: [
         {
-          FirstValue: The value
+          Address: https://google.com,
+          Text: The value,
+          Area: {
+            Column: 0,
+            Row: 1
+          },
+          LinkType: External
         }
       ]
     }
