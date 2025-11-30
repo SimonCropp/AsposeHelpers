@@ -38,9 +38,9 @@ public static partial class WordExtensions
                 return Load(memoryStream, options);
             }
 
-            var destination = new MemoryStream();
-            await stream.CopyToAsync(destination);
-            return Load(destination, options);
+            memoryStream = new();
+            await stream.CopyToAsync(memoryStream);
+            return Load(memoryStream, options);
         }
 
         /// <summary>
