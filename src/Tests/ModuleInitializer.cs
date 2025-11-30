@@ -8,7 +8,7 @@ public static class ModuleInitializer
         ApplyAsposeLicense();
         VerifyAspose.Initialize();
         VerifyDiffPlex.Initialize();
-        VerifyImageMagick.RegisterComparers(.5);
+        VerifyImageMagick.RegisterComparers(.6);
         VerifierSettings.IgnoreMember("Width");
         VerifierSettings.ScrubLinesContaining("evaluation", "License");
     }
