@@ -1,4 +1,6 @@
-﻿namespace Aspose.Words;
+﻿using Aspose.Words.Loading;
+
+namespace Aspose.Words;
 
 public static partial class WordExtensions
 {
@@ -7,28 +9,60 @@ public static partial class WordExtensions
         /// <summary>
         /// Loads a MemoryStream into a <see cref="Document"/> and validates it is not corrupt.
         /// </summary>
-        public static Document LoadDocx(MemoryStream stream)
+        public static Document Load(MemoryStream stream, LoadFormat format = LoadFormat.Docx) =>
+            Document.Load(
+                stream,
+                new LoadOptions
+                {
+                    LoadFormat = format
+                });
+
+        /// <summary>
+        /// Loads a MemoryStream into a <see cref="Document"/> and validates it is not corrupt.
+        /// </summary>
+        public static Task<Document> Load(Stream stream, LoadFormat format = LoadFormat.Docx) =>
+            Document.Load(
+                stream,
+                new LoadOptions
+                {
+                    LoadFormat = format
+                });
+
+        /// <summary>
+        /// Loads a MemoryStream into a <see cref="Document"/> and validates it is not corrupt.
+        /// </summary>
+        public static async Task<Document> Load(Stream stream, LoadOptions options)
+        {
+            if (stream is MemoryStream memoryStream)
+            {
+                return Load(memoryStream, options);
+            }
+
+            var destination = new MemoryStream();
+            await stream.CopyToAsync(destination);
+            return Load(destination, options);
+        }
+
+        /// <summary>
+        /// Loads a MemoryStream into a <see cref="Document"/> and validates it is not corrupt.
+        /// </summary>
+        public static Document Load(MemoryStream stream, LoadOptions options)
         {
             stream.Position = 0;
-
             var document = new Document(
                 stream,
-                new()
-                {
-                    LoadFormat = LoadFormat.Docx
-                });
+                options);
 
             stream.Position = 0;
             var fileFormat = FileFormatUtil.DetectFileFormat(stream);
             // DetectFileFormat uses the same logic as the Document but lets
             // us checked if it has mitakenly resolved to an incorrect format
-            var format = fileFormat.LoadFormat;
-            if (format != LoadFormat.Docx)
+            if (fileFormat.LoadFormat == options.LoadFormat)
             {
-                throw new($"Bad document type or corrupt. Detected: {format}. Expected: Docx.");
+                return document;
             }
 
-            return document;
+            throw new($"Bad document type or corrupt. Detected: {fileFormat.LoadFormat}. Expected: {options.LoadFormat}.");
         }
     }
 }

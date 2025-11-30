@@ -10,7 +10,7 @@ public class LoadDocxTests
         using var stream = CreateValidDocxStream();
 
         // Act
-        var document = WordExtensions.LoadDocx(stream);
+        var document = WordExtensions.Load(stream);
 
         // Assert
         Assert.That(document, Is.Not.Null);
@@ -25,7 +25,7 @@ public class LoadDocxTests
         using var stream = CreateValidDocxStream("Test content");
 
         // Act
-        var document = WordExtensions.LoadDocx(stream);
+        var document = WordExtensions.Load(stream);
 
         // Assert
         Assert.That(document.GetText().Trim(), Is.EqualTo("Test content"));
@@ -38,7 +38,7 @@ public class LoadDocxTests
         using var stream = CreateDocStream();
 
         // Act & Assert
-        var exception = Assert.Throws<Exception>(() => WordExtensions.LoadDocx(stream))!;
+        var exception = Assert.Throws<Exception>(() => WordExtensions.Load(stream))!;
         Assert.That(exception.Message, Does.Contain("Bad document type or corrupt"));
         Assert.That(exception.Message, Does.Contain("Expected: Docx"));
     }
@@ -50,7 +50,7 @@ public class LoadDocxTests
         using var stream = CreateRtfStream();
 
         // Act & Assert
-        var exception = Assert.Throws<Exception>(() => WordExtensions.LoadDocx(stream))!;
+        var exception = Assert.Throws<Exception>(() => WordExtensions.Load(stream))!;
         Assert.That(exception.Message, Does.Contain("Bad document type or corrupt"));
         Assert.That(exception.Message, Does.Contain("Detected: Rtf"));
     }
@@ -62,7 +62,7 @@ public class LoadDocxTests
         using var stream = new MemoryStream("Not a valid DOCX file"u8.ToArray());
 
         // Act & Assert
-        var exception = Assert.Throws<Exception>(() => WordExtensions.LoadDocx(stream))!;
+        var exception = Assert.Throws<Exception>(() => WordExtensions.Load(stream))!;
         Assert.That(exception.Message, Does.Contain("Bad document type or corrupt"));
     }
 
@@ -73,7 +73,7 @@ public class LoadDocxTests
         using var stream = new MemoryStream();
 
         // Act & Assert
-        Assert.Throws<Exception>(() => WordExtensions.LoadDocx(stream));
+        Assert.Throws<Exception>(() => WordExtensions.Load(stream));
     }
 
     [Test]
@@ -85,7 +85,7 @@ public class LoadDocxTests
         stream.Position = 100;
 
         // Act
-        var document = WordExtensions.LoadDocx(stream);
+        var document = WordExtensions.Load(stream);
 
         // Assert
         Assert.That(document, Is.Not.Null);
