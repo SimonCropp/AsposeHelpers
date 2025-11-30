@@ -13,8 +13,6 @@
   },
   ShadeFormData: true,
   Text:
-![](content.001.png)
-
 ## **the text**
 
 

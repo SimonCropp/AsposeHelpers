@@ -13,9 +13,6 @@
   },
   ShadeFormData: true,
   Text:
-![](content.001.png)
-
-
 [Custom toc entry	1](#_toc256000000)
 
 the text
