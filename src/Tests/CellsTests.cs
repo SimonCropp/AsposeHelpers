@@ -1,5 +1,4 @@
 using Aspose.Cells;
-using NUnit.Framework.Legacy;
 
 [TestFixture]
 public class CellsTests
