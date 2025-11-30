@@ -7,253 +7,292 @@ namespace Aspose.Words;
 
 public static partial class WordExtensions
 {
-    public static void WriteEmail(this DocumentBuilder builder, string email)
+    extension(DocumentBuilder builder)
     {
-        builder.Font.Color = Color.Blue;
-        builder.Font.Underline = Underline.Single;
-        builder.InsertHyperlink(email, $"mailto://{email}", false);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void ClearFormatting(this DocumentBuilder builder)
-    {
-        builder.Bold = false;
-        builder.Italic = false;
-        builder.Font.ClearFormatting();
-        builder.ParagraphFormat.ClearFormatting();
-        builder.Font.Border.ClearFormatting();
-    }
-
-    public static void WriteLine(this DocumentBuilder builder, char line) =>
-        builder.Writeln(line.ToString());
-
-    public static void WriteBoldLine(this DocumentBuilder builder, string line)
-    {
-        builder.Bold = true;
-        builder.Writeln(line);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteItalicLine(this DocumentBuilder builder, string line)
-    {
-        builder.Italic = true;
-        builder.Writeln(line);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteBoldItalicLine(this DocumentBuilder builder, string line)
-    {
-        builder.Bold = true;
-        builder.Italic = true;
-        builder.Writeln(line);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteBold(this DocumentBuilder builder, string line)
-    {
-        builder.Bold = true;
-        builder.Write(line);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteItalic(this DocumentBuilder builder, string line)
-    {
-        builder.Italic = true;
-        builder.Write(line);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteBoldItalic(this DocumentBuilder builder, string line)
-    {
-        builder.Bold = true;
-        builder.Italic = true;
-        builder.Write(line);
-        builder.Font.ClearFormatting();
-    }
-
-    [Pure]
-    public static IDisposable UseStyled(this DocumentBuilder builder, string name)
-    {
-        builder.ParagraphFormat.Style = FindParagraphStyle(builder, name);
-        return new ClearStyleDisposable(builder);
-    }
-
-    [Pure]
-    public static IDisposable UseBold(this DocumentBuilder builder)
-    {
-        builder.Bold = true;
-        return new FontClearFormattingDisposable(builder);
-    }
-
-    [Pure]
-    public static IDisposable UseItalic(this DocumentBuilder builder)
-    {
-        builder.Italic = true;
-        return new FontClearFormattingDisposable(builder);
-    }
-
-    [Pure]
-    public static IDisposable UseBoldItalic(this DocumentBuilder builder)
-    {
-        builder.Bold = true;
-        builder.Italic = true;
-        return new FontClearFormattingDisposable(builder);
-    }
-
-    public static void Write(this DocumentBuilder builder, char ch) =>
-        builder.Write(ch.ToString());
-
-    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, int level, bool pageNumber = true) =>
-        InsertTocEntry(builder, text, level.ToString(), pageNumber);
-
-    public static FieldTC InsertTocEntry(this DocumentBuilder builder, string text, string level, bool pageNumber = true)
-    {
-        builder.Font.ClearFormatting();
-        builder.Font.Color = Color.White;
-        builder.Font.Size = 0;
-        var field = (FieldTC)builder.InsertField(FieldType.FieldTOCEntry, true);
-        field.EntryLevel = level;
-        field.OmitPageNumber = !pageNumber;
-        field.Text = text;
-        builder.Writeln();
-        builder.Font.ClearFormatting();
-        return field;
-    }
-
-    public static void WriteLink(this DocumentBuilder builder, string text, string link)
-    {
-        builder.Font.Color = Color.Blue;
-        builder.Font.Underline = Underline.Single;
-        builder.InsertHyperlink(text, link, false);
-        builder.Font.ClearFormatting();
-    }
-
-    public static void WriteH1(this DocumentBuilder builder, string text) =>
-        builder.WriteStyled(text, StyleIdentifier.Heading1);
-
-    public static void WriteH2(this DocumentBuilder builder, string text) =>
-        builder.WriteStyled(text, StyleIdentifier.Heading2);
-
-    public static void WriteH3(this DocumentBuilder builder, string text) =>
-        builder.WriteStyled(text, StyleIdentifier.Heading3);
-
-    public static void WriteH4(this DocumentBuilder builder, string text) =>
-        builder.WriteStyled(text, StyleIdentifier.Heading4);
-
-    public static void WriteH5(this DocumentBuilder builder, string text) =>
-        builder.WriteStyled(text, StyleIdentifier.Heading5);
-
-    public static void SetMargins(this DocumentBuilder builder, double millimeters)
-    {
-        var margin = ConvertUtil.MillimeterToPoint(millimeters);
-        var pageSetup = builder.PageSetup;
-        pageSetup.TopMargin = margin;
-        pageSetup.BottomMargin = margin;
-        pageSetup.LeftMargin = margin;
-        pageSetup.RightMargin = margin;
-        pageSetup.HeaderDistance = margin;
-        pageSetup.FooterDistance = margin;
-    }
-
-    public static void WriteStyled(this DocumentBuilder builder, string text, string styleName)
-    {
-        var style = FindParagraphStyle(builder, styleName);
-
-        builder.ParagraphFormat.Style = style;
-        builder.Writeln(text);
-        builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
-    }
-
-    public static void AssignStyle(this Table table, string name) =>
-        table.Style = table.Document.FindStyle(name, StyleType.Table);
-
-    public static Style FindCharacterStyle(this DocumentBuilder builder, string name) =>
-        FindStyle(builder
-            .Document, name, StyleType.Character);
-
-    public static Style FindCharacterStyle(this DocumentBase document, string name) =>
-        FindStyle(document, name, StyleType.Character);
-
-    public static Style FindTableStyle(this DocumentBuilder builder, string name) =>
-        FindStyle(builder
-            .Document, name, StyleType.Table);
-
-    public static Style FindTableStyle(this DocumentBase document, string name) =>
-        FindStyle(document, name, StyleType.Table);
-
-    public static Style FindListStyle(this DocumentBuilder builder, string name) =>
-        FindStyle(builder
-            .Document, name, StyleType.List);
-
-    public static Style FindListStyle(this DocumentBase document, string name) =>
-        FindStyle(document, name, StyleType.List);
-
-    public static Style FindParagraphStyle(this DocumentBuilder builder, string name) =>
-        FindStyle(builder
-            .Document, name, StyleType.Paragraph);
-
-    public static Style FindParagraphStyle(this DocumentBase document, string name) =>
-        FindStyle(document, name, StyleType.Paragraph);
-
-    public static Style FindStyle(this DocumentBuilder builder, string name, StyleType? type = null) =>
-        FindStyle(builder
-            .Document, name, type);
-
-    public static Style FindStyle(this DocumentBase document, string name, StyleType? type)
-    {
-        List<Style> styles;
-        var available = document
-            .Styles;
-        if (type == null)
+        public void WriteEmail(string email)
         {
-            styles = available
-                .ToList();
-        }
-        else
-        {
-            styles = available
-                .Where(_ => _.Type == type)
-                .ToList();
+            builder.Font.Color = Color.Blue;
+            builder.Font.Underline = Underline.Single;
+            builder.InsertHyperlink(email, $"mailto://{email}", false);
+            builder.Font.ClearFormatting();
         }
 
-        var style = styles.SingleOrDefault(_ => _.Name == name);
-        if (style != null)
+        public void ClearFormatting()
         {
-            return style;
+            builder.Bold = false;
+            builder.Italic = false;
+            builder.Font.ClearFormatting();
+            builder.ParagraphFormat.ClearFormatting();
+            builder.Font.Border.ClearFormatting();
         }
 
-        var names = string.Join(", ", styles.Select(_ => _.Name));
-        if (type == null)
+        public void WriteLine(char line) =>
+            builder.Writeln(line.ToString());
+
+        public void WriteBoldLine(string line)
         {
-            throw new($"Could not find style '{name}'. Available styles: {names}");
+            builder.Bold = true;
+            builder.Writeln(line);
+            builder.Font.ClearFormatting();
         }
 
-        throw new($"Could not find {type} style '{name}'. Available styles: {names}");
+        public void WriteItalicLine(string line)
+        {
+            builder.Italic = true;
+            builder.Writeln(line);
+            builder.Font.ClearFormatting();
+        }
+
+        public void WriteBoldItalicLine(string line)
+        {
+            builder.Bold = true;
+            builder.Italic = true;
+            builder.Writeln(line);
+            builder.Font.ClearFormatting();
+        }
+
+        public void WriteBold(string line)
+        {
+            builder.Bold = true;
+            builder.Write(line);
+            builder.Font.ClearFormatting();
+        }
+
+        public void WriteItalic(string line)
+        {
+            builder.Italic = true;
+            builder.Write(line);
+            builder.Font.ClearFormatting();
+        }
+
+        public void WriteBoldItalic(string line)
+        {
+            builder.Bold = true;
+            builder.Italic = true;
+            builder.Write(line);
+            builder.Font.ClearFormatting();
+        }
+
+        [Pure]
+        public IDisposable UseStyled(string name)
+        {
+            builder.ParagraphFormat.Style = FindParagraphStyle(builder, name);
+            return new ClearStyleDisposable(builder);
+        }
+
+        [Pure]
+        public IDisposable UseBold()
+        {
+            builder.Bold = true;
+            return new FontClearFormattingDisposable(builder);
+        }
+
+        [Pure]
+        public IDisposable UseItalic()
+        {
+            builder.Italic = true;
+            return new FontClearFormattingDisposable(builder);
+        }
+
+        [Pure]
+        public IDisposable UseBoldItalic()
+        {
+            builder.Bold = true;
+            builder.Italic = true;
+            return new FontClearFormattingDisposable(builder);
+        }
+
+        public void Write(char ch) =>
+            builder.Write(ch.ToString());
+
+        public FieldTC InsertTocEntry(string text, int level, bool pageNumber = true) =>
+            InsertTocEntry(builder, text, level.ToString(), pageNumber);
+
+        public FieldTC InsertTocEntry(string text, string level, bool pageNumber = true)
+        {
+            builder.Font.ClearFormatting();
+            builder.Font.Color = Color.White;
+            builder.Font.Size = 0;
+            var field = (FieldTC)builder.InsertField(FieldType.FieldTOCEntry, true);
+            field.EntryLevel = level;
+            field.OmitPageNumber = !pageNumber;
+            field.Text = text;
+            builder.Writeln();
+            builder.Font.ClearFormatting();
+            return field;
+        }
+
+        public void WriteLink(string text, string link)
+        {
+            builder.Font.Color = Color.Blue;
+            builder.Font.Underline = Underline.Single;
+            builder.InsertHyperlink(text, link, false);
+            builder.Font.ClearFormatting();
+        }
+
+        public void WriteH1(string text) =>
+            builder.WriteStyled(text, StyleIdentifier.Heading1);
+
+        public void WriteH2(string text) =>
+            builder.WriteStyled(text, StyleIdentifier.Heading2);
+
+        public void WriteH3(string text) =>
+            builder.WriteStyled(text, StyleIdentifier.Heading3);
+
+        public void WriteH4(string text) =>
+            builder.WriteStyled(text, StyleIdentifier.Heading4);
+
+        public void WriteH5(string text) =>
+            builder.WriteStyled(text, StyleIdentifier.Heading5);
+
+        public void SetMargins(double millimeters)
+        {
+            var margin = ConvertUtil.MillimeterToPoint(millimeters);
+            var pageSetup = builder.PageSetup;
+            pageSetup.TopMargin = margin;
+            pageSetup.BottomMargin = margin;
+            pageSetup.LeftMargin = margin;
+            pageSetup.RightMargin = margin;
+            pageSetup.HeaderDistance = margin;
+            pageSetup.FooterDistance = margin;
+        }
+
+        public void WriteStyled(string text, string styleName)
+        {
+            var style = FindParagraphStyle(builder, styleName);
+
+            builder.ParagraphFormat.Style = style;
+            builder.Writeln(text);
+            builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+        }
     }
 
-    public static void WriteStyled(this DocumentBuilder builder, string text, StyleIdentifier style)
+    extension(Table table)
     {
-        builder.ParagraphFormat.StyleIdentifier = style;
-        builder.Writeln(text);
-        builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+        public void AssignStyle(string name) =>
+            table.Style = table.Document.FindStyle(name, StyleType.Table);
     }
 
-    public static void ApplyBorder(this DocumentBuilder documentBuilder, LineStyle style)
+    extension(DocumentBuilder builder)
     {
-        var borders = documentBuilder.ParagraphFormat.Borders;
-        borders[BorderType.Left].LineStyle = style;
-        borders[BorderType.Right].LineStyle = style;
-        borders[BorderType.Top].LineStyle = style;
-        borders[BorderType.Bottom].LineStyle = style;
+        public Style FindCharacterStyle(string name) =>
+            FindStyle(builder
+                .Document, name, StyleType.Character);
     }
 
-    public static void AddPageNumbers(this DocumentBuilder builder)
+    extension(DocumentBase document)
     {
-        builder.MoveToHeaderFooter(HeaderFooterType.FooterPrimary);
-        builder.ParagraphFormat.Alignment = ParagraphAlignment.Right;
-        builder.Write("Page ");
-        builder.InsertField(FieldType.FieldPage, true);
-        builder.Write(" of ");
-        builder.InsertField(FieldType.FieldNumPages, true);
+        public Style FindCharacterStyle(string name) =>
+            FindStyle(document, name, StyleType.Character);
+    }
+
+    extension(DocumentBuilder builder)
+    {
+        public Style FindTableStyle(string name) =>
+            FindStyle(builder
+                .Document, name, StyleType.Table);
+    }
+
+    extension(DocumentBase document)
+    {
+        public Style FindTableStyle(string name) =>
+            FindStyle(document, name, StyleType.Table);
+    }
+
+    extension(DocumentBuilder builder)
+    {
+        public Style FindListStyle(string name) =>
+            FindStyle(builder
+                .Document, name, StyleType.List);
+    }
+
+    extension(DocumentBase document)
+    {
+        public Style FindListStyle(string name) =>
+            FindStyle(document, name, StyleType.List);
+    }
+
+    extension(DocumentBuilder builder)
+    {
+        public Style FindParagraphStyle(string name) =>
+            FindStyle(builder
+                .Document, name, StyleType.Paragraph);
+    }
+
+    extension(DocumentBase document)
+    {
+        public Style FindParagraphStyle(string name) =>
+            FindStyle(document, name, StyleType.Paragraph);
+    }
+
+    extension(DocumentBuilder builder)
+    {
+        public Style FindStyle(string name, StyleType? type = null) =>
+            FindStyle(builder
+                .Document, name, type);
+    }
+
+    extension(DocumentBase document)
+    {
+        public Style FindStyle(string name, StyleType? type)
+        {
+            List<Style> styles;
+            var available = document
+                .Styles;
+            if (type == null)
+            {
+                styles = available
+                    .ToList();
+            }
+            else
+            {
+                styles = available
+                    .Where(_ => _.Type == type)
+                    .ToList();
+            }
+
+            var style = styles.SingleOrDefault(_ => _.Name == name);
+            if (style != null)
+            {
+                return style;
+            }
+
+            var names = string.Join(", ", styles.Select(_ => _.Name));
+            if (type == null)
+            {
+                throw new($"Could not find style '{name}'. Available styles: {names}");
+            }
+
+            throw new($"Could not find {type} style '{name}'. Available styles: {names}");
+        }
+    }
+
+    extension(DocumentBuilder builder)
+    {
+        public void WriteStyled(string text, StyleIdentifier style)
+        {
+            builder.ParagraphFormat.StyleIdentifier = style;
+            builder.Writeln(text);
+            builder.ParagraphFormat.StyleIdentifier = StyleIdentifier.Normal;
+        }
+
+        public void ApplyBorder(LineStyle style)
+        {
+            var borders = builder.ParagraphFormat.Borders;
+            borders[BorderType.Left].LineStyle = style;
+            borders[BorderType.Right].LineStyle = style;
+            borders[BorderType.Top].LineStyle = style;
+            borders[BorderType.Bottom].LineStyle = style;
+        }
+
+        public void AddPageNumbers()
+        {
+            builder.MoveToHeaderFooter(HeaderFooterType.FooterPrimary);
+            builder.ParagraphFormat.Alignment = ParagraphAlignment.Right;
+            builder.Write("Page ");
+            builder.InsertField(FieldType.FieldPage, true);
+            builder.Write(" of ");
+            builder.InsertField(FieldType.FieldNumPages, true);
+        }
     }
 }

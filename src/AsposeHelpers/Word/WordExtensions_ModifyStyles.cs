@@ -2,21 +2,24 @@
 
 public static partial class WordExtensions
 {
-    public static void ModifyStyles(this Document document, Action<Style> action)
+    extension(Document document)
     {
-        foreach (var style in document.Styles)
+        public void ModifyStyles(Action<Style> action)
         {
-            action(style);
-        }
-    }
-
-    public static void ModifyStyleFonts(this Document document, Action<Font> action)
-    {
-        foreach (var style in document.Styles)
-        {
-            if (style.Font != null)
+            foreach (var style in document.Styles)
             {
-                action(style.Font);
+                action(style);
+            }
+        }
+
+        public void ModifyStyleFonts(Action<Font> action)
+        {
+            foreach (var style in document.Styles)
+            {
+                if (style.Font != null)
+                {
+                    action(style.Font);
+                }
             }
         }
     }

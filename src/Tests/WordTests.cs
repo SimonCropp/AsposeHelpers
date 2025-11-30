@@ -151,13 +151,13 @@ public class WordTests
         var document = new Document();
 
         AddParagraphStyle(document);
-        var documentBuilder = new DocumentBuilder(document);
-        var pageSetup = documentBuilder.PageSetup;
+        var builder = new DocumentBuilder(document);
+        var pageSetup = builder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
 
-        documentBuilder.WriteStyled("the text", "MyStyle");
+        builder.WriteStyled("the text", "MyStyle");
 
-        return Verify(documentBuilder.Document);
+        return Verify(builder.Document);
     }
 
     [Test]
@@ -166,18 +166,18 @@ public class WordTests
         var document = new Document();
 
         AddParagraphStyle(document);
-        var documentBuilder = new DocumentBuilder(document);
-        var pageSetup = documentBuilder.PageSetup;
+        var builder = new DocumentBuilder(document);
+        var pageSetup = builder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
 
-        documentBuilder.Writeln("one");
-        using (documentBuilder.UseStyled("MyStyle"))
+        builder.Writeln("one");
+        using (builder.UseStyled("MyStyle"))
         {
-            documentBuilder.Writeln("two");
+            builder.Writeln("two");
         }
 
-        documentBuilder.Writeln("three");
-        return Verify(documentBuilder.Document);
+        builder.Writeln("three");
+        return Verify(builder.Document);
     }
 
     static void AddTableStyle(Document document)
@@ -199,12 +199,12 @@ public class WordTests
     [Test]
     public Task ModifyStyles()
     {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
-        var document = documentBuilder.Document;
+        var document = builder.Document;
 
-        documentBuilder.WriteH2("the text");
+        builder.WriteH2("the text");
 
         #region ModifyStyles
 
@@ -219,12 +219,12 @@ public class WordTests
     [Test]
     public Task ModifyStyleFonts()
     {
-        var documentBuilder = new DocumentBuilder();
-        var pageSetup = documentBuilder.PageSetup;
+        var builder = new DocumentBuilder();
+        var pageSetup = builder.PageSetup;
         pageSetup.PaperSize = PaperSize.A5;
-        var document = documentBuilder.Document;
+        var document = builder.Document;
 
-        documentBuilder.WriteH2("the text");
+        builder.WriteH2("the text");
 
         #region ModifyStyleFonts
 

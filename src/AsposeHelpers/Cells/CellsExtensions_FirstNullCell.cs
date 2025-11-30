@@ -2,18 +2,21 @@ namespace Aspose.Cells;
 
 public static partial class CellsExtensions
 {
-    public static Cell FirstNullCell(this Worksheet sheet, int row)
+    extension(Worksheet sheet)
     {
-        var column = 0;
-        while (true)
+        public Cell FirstNullCell(int row)
         {
-            var cell = sheet.Cells[row, column];
-            if (cell.Value == null)
+            var column = 0;
+            while (true)
             {
-                return cell;
-            }
+                var cell = sheet.Cells[row, column];
+                if (cell.Value == null)
+                {
+                    return cell;
+                }
 
-            column++;
+                column++;
+            }
         }
     }
 }
