@@ -1,4 +1,5 @@
 ﻿using Aspose.Words;
+using Aspose.Words.Fields;
 
 [TestFixture]
 public class WordTests
@@ -269,5 +270,80 @@ public class WordTests
         #endregion
 
         return Verify(documentBuilder.Document);
+    }
+
+    [Test]
+    public void ReplaceField_ReplacesFieldWithValue()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+
+        builder.ReplaceField("TestField", "Replacement Text");
+
+        var field = document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField");
+        Assert.That(field, Is.Null);
+        Assert.That(document.Range.Text, Does.Contain("Replacement Text"));
+    }
+
+    [Test]
+    public void ReplaceField_ThrowsWhenFieldNotFound()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.ReplaceField("NonExistent", "value"))!;
+
+        Assert.That(exception.Message, Is.EqualTo("Could not find field: NonExistent"));
+    }
+
+    [Test]
+    public void DisplaceField_RemovesField()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+        Assert.That(document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField"), Is.Not.Null);
+
+        builder.DisplaceField("TestField");
+
+        var field = document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField");
+        Assert.That(field, Is.Null);
+    }
+
+    [Test]
+    public void DisplaceField_ThrowsWhenFieldNotFound()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.DisplaceField("NonExistent"))!;
+
+        Assert.That(exception.Message, Is.EqualTo("Could not find field: NonExistent"));
+    }
+
+    [Test]
+    public void ReplaceField_HandlesMultipleFields()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Field1", TextFormFieldType.Regular, "", "", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "", 0);
+
+        builder.ReplaceField("Field1", "First");
+        builder.ReplaceField("Field2", "Second");
+
+        var fields = document.Range.FormFields;
+        Assert.That(fields.SingleOrDefault(_ => _.Name == "Field1"), Is.Null);
+        Assert.That(fields.SingleOrDefault(_ => _.Name == "Field2"), Is.Null);
+        var text = document.Range.Text;
+        Assert.That(text, Does.Contain("First"));
+        Assert.That(text, Does.Contain("Second"));
     }
 }

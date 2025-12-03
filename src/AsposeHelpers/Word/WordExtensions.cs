@@ -9,6 +9,24 @@ public static partial class WordExtensions
 {
     extension(DocumentBuilder builder)
     {
+        public void ReplaceField(string name, string value)
+        {
+            DisplaceField(builder, name);
+            builder.Write(value);
+        }
+
+        public void DisplaceField(string name)
+        {
+            var field = builder.Document.Range.FormFields.SingleOrDefault(_ => _.Name == name);
+            if (field == null)
+            {
+                throw new($"Could not find field: {name}");
+            }
+
+            builder.MoveToBookmark(name, false, true);
+            field.RemoveField();
+        }
+
         public void WriteEmail(string email)
         {
             builder.Font.Color = Color.Blue;
