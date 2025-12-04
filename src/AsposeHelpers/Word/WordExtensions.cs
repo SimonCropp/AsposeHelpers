@@ -11,8 +11,18 @@ public static partial class WordExtensions
     {
         public void ReplaceField(string name, string value)
         {
-            DisplaceField(builder, name);
-            builder.Write(value);
+            var fields = builder.Document.Range.FormFields.Where(_ => _.Name == name).ToList();
+            if (fields.Count == 0)
+            {
+                throw new($"Could not find field: {name}");
+            }
+
+            foreach (var field in fields)
+            {
+                builder.MoveToBookmark(name, false, true);
+                field.RemoveField();
+                builder.Write(value);
+            }
         }
 
         public void DisplaceField(string name)

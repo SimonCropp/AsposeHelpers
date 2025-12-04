@@ -1,4 +1,5 @@
-﻿using Aspose.Words;
+﻿using System.Text.RegularExpressions;
+using Aspose.Words;
 using Aspose.Words.Fields;
 
 [TestFixture]
@@ -285,6 +286,28 @@ public class WordTests
         var field = document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField");
         Assert.That(field, Is.Null);
         Assert.That(document.Range.Text, Does.Contain("Replacement Text"));
+    }
+
+    [Test]
+    public void ReplaceField_ReplacesMultipleFieldsWithSameName()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+        builder.Write(" some text ");
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+        builder.Write(" more text ");
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+
+        builder.ReplaceField("TestField", "Replacement Text");
+
+        var fields = document.Range.FormFields.Where(_ => _.Name == "TestField").ToList();
+        Assert.That(fields, Is.Empty);
+
+        var text = document.Range.Text;
+        var count = Regex.Matches(text, "Replacement Text").Count;
+        Assert.That(count, Is.EqualTo(3));
     }
 
     [Test]
