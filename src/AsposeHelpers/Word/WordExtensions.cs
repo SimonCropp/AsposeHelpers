@@ -30,7 +30,12 @@ public static partial class WordExtensions
             var found = fields.Where(_ => _.Name == name).ToList();
             if (found.Count == 0)
             {
-                throw new($"Could not find field: {name}. Existing fields are: {string.Join(", ", fields.Select(_ => _.Name))}");
+                throw new(
+                    $"""
+                     Could not find field: {name}.
+                     Existing fields are:
+                     {string.Join('\n', fields.Select(_ => $" * {_.Name}"))}
+                     """);
             }
 
             return found;

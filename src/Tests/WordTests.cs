@@ -371,4 +371,82 @@ public class WordTests
         Assert.That(text, Does.Contain("First"));
         Assert.That(text, Does.Contain("Second"));
     }
+
+    [Test]
+    public void FindFields_WhenFieldExists_ReturnsSingleField()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+
+        var result = builder.FindFields("TestField");
+
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("TestField"));
+    }
+
+    [Test]
+    public void FindFields_WhenMultipleFieldsWithSameName_ReturnsAll()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Address", TextFormFieldType.Regular, "", "", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Address", TextFormFieldType.Regular, "", "", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Phone", TextFormFieldType.Regular, "", "", 0);
+
+        var result = builder.FindFields("Address");
+
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(_ => _.Name == "Address"), Is.True);
+    }
+
+    [Test]
+    public Task FindFields_WhenDocumentHasNoFields_Throws()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.FindFields("TestField"))!;
+
+        return Verify(exception)
+            .IgnoreStackTrace();
+    }
+
+    [Test]
+    public Task FindFields_WhenFieldNotFound_ThrowsWithFieldList()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("FirstName", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("LastName", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.FindFields("MissingField"))!;
+
+        return Verify(exception)
+            .IgnoreStackTrace();
+    }
+
+    [Test]
+    public void FindFields_WithExactMatch_DoesNotReturnPartialMatches()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Name", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("FullName", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("FirstName", TextFormFieldType.Regular, "", "", 0);
+
+        var result = builder.FindFields("Name");
+
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("Name"));
+    }
 }
