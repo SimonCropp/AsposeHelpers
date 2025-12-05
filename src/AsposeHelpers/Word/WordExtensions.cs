@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using System.Drawing;
-using Aspose.Words.Fields;
+﻿using Aspose.Words.Fields;
 using Aspose.Words.Tables;
 
 namespace Aspose.Words;
@@ -11,11 +9,7 @@ public static partial class WordExtensions
     {
         public void ReplaceField(string name, string value)
         {
-            var fields = builder.Document.Range.FormFields.Where(_ => _.Name == name).ToList();
-            if (fields.Count == 0)
-            {
-                throw new($"Could not find field: {name}");
-            }
+            var fields = builder.FindFields(name);
 
             foreach (var field in fields)
             {
@@ -25,14 +19,26 @@ public static partial class WordExtensions
             }
         }
 
-        public void DisplaceField(string name)
+        public List<FormField> FindFields(string name)
         {
-            var field = builder.Document.Range.FormFields.SingleOrDefault(_ => _.Name == name);
-            if (field == null)
+            var fields = builder.Document.Range.FormFields;
+            if (fields.Count == 0)
             {
-                throw new($"Could not find field: {name}");
+                throw new($"Could not find field: {name}. Document contains no fields.");
             }
 
+            var found = fields.Where(_ => _.Name == name).ToList();
+            if (found.Count == 0)
+            {
+                throw new($"Could not find field: {name}. Existing fields are: {string.Join(", ", fields.Select(_ => _.Name))}");
+            }
+
+            return found;
+        }
+
+        public void DisplaceField(string name)
+        {
+            var field = builder.FindFields(name).Single();
             builder.MoveToBookmark(name, false, true);
             field.RemoveField();
         }

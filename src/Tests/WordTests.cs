@@ -311,7 +311,7 @@ public class WordTests
     }
 
     [Test]
-    public void ReplaceField_ThrowsWhenFieldNotFound()
+    public Task ReplaceField_ThrowsWhenFieldNotFound()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -319,7 +319,8 @@ public class WordTests
         var exception = Assert.Throws<Exception>(() =>
             builder.ReplaceField("NonExistent", "value"))!;
 
-        Assert.That(exception.Message, Is.EqualTo("Could not find field: NonExistent"));
+        return Verify(exception)
+            .IgnoreStackTrace();
     }
 
     [Test]
@@ -338,7 +339,7 @@ public class WordTests
     }
 
     [Test]
-    public void DisplaceField_ThrowsWhenFieldNotFound()
+    public Task DisplaceField_ThrowsWhenFieldNotFound()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -346,7 +347,8 @@ public class WordTests
         var exception = Assert.Throws<Exception>(() =>
             builder.DisplaceField("NonExistent"))!;
 
-        Assert.That(exception.Message, Is.EqualTo("Could not find field: NonExistent"));
+        return Verify(exception)
+            .IgnoreStackTrace();
     }
 
     [Test]
