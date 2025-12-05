@@ -34,7 +34,7 @@ public static partial class WordExtensions
                     $"""
                      Could not find field: {name}.
                      Existing fields are:
-                     {string.Join('\n', fields.Select(_ => $" * {_.Name}"))}
+                     {string.Join('\n', fields.Select(_ => _.Name).Distinct().Order().Select(_ => $" * {_}"))}
                      """);
             }
 

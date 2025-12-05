@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Aspose.Words;
+﻿using Aspose.Words;
 using Aspose.Words.Fields;
 
 [TestFixture]
@@ -448,5 +447,40 @@ public class WordTests
 
         Assert.That(result, Has.Count.EqualTo(1));
         Assert.That(result[0].Name, Is.EqualTo("Name"));
+    }
+    [Test]
+    public Task FindFields_WhenFieldNotFound_ListsDistinctFieldsOnly()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Phone", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.FindFields("MissingField"))!;
+
+        return Verify(exception)
+            .IgnoreStackTrace();
+    }
+
+    [Test]
+    public Task FindFields_WhenFieldNotFound_ListsFieldsAlphabetically()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Zebra", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Apple", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Mango", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("Banana", TextFormFieldType.Regular, "", "", 0);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.FindFields("MissingField"))!;
+
+        return Verify(exception)
+            .IgnoreStackTrace();
     }
 }

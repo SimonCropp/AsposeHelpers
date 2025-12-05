@@ -4,6 +4,5 @@
 Could not find field: MissingField.
 Existing fields are:
  * Email
- * FirstName
- * LastName
+ * Phone
 }
