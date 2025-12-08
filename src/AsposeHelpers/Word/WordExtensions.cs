@@ -13,7 +13,7 @@ public static partial class WordExtensions
 
             foreach (var field in fields)
             {
-                builder.MoveToBookmark(name, false, true);
+                builder.MoveTo(field);
                 field.RemoveField();
                 builder.Write(value);
             }
