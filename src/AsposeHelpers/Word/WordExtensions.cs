@@ -27,7 +27,7 @@ public static partial class WordExtensions
                 throw new($"Could not find field: {name}. Document contains no fields.");
             }
 
-            var found = fields.Where(_ => _.Name == name).ToList();
+            var found = fields.Where(_ => _.Name == name || _.Result == name).ToList();
             if (found.Count == 0)
             {
                 throw new(
