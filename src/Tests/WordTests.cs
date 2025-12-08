@@ -448,6 +448,7 @@ public class WordTests
         Assert.That(result, Has.Count.EqualTo(1));
         Assert.That(result[0].Name, Is.EqualTo("Name"));
     }
+
     [Test]
     public Task FindFields_WhenFieldNotFound_ListsDistinctFieldsOnly()
     {
@@ -482,5 +483,89 @@ public class WordTests
 
         return Verify(exception)
             .IgnoreStackTrace();
+    }
+
+    [Test]
+    public void FindFields_MatchesByResult_ReturnsSingleField()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "Expected Value", 0);
+
+        var result = builder.FindFields("Expected Value");
+
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0].Result, Is.EqualTo("Expected Value"));
+    }
+
+    [Test]
+    public void FindFields_MatchesByResult_ReturnsMultipleFieldsWithSameResult()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Field1", TextFormFieldType.Regular, "", "Same Value", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "Same Value", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Field3", TextFormFieldType.Regular, "", "Different Value", 0);
+
+        var result = builder.FindFields("Same Value");
+
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.All(_ => _.Result == "Same Value"), Is.True);
+    }
+
+    [Test]
+    public void ReplaceField_MatchesByResult_ReplacesField()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "Original Value", 0);
+
+        builder.ReplaceField("Original Value", "Replacement Text");
+
+        var field = document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField");
+        Assert.That(field, Is.Null);
+        Assert.That(document.Range.Text, Does.Contain("Replacement Text"));
+    }
+
+    [Test]
+    public void ReplaceField_MatchesByResult_ReplacesMultipleFields()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Field1", TextFormFieldType.Regular, "", "Shared Value", 0);
+        builder.Write(" some text ");
+        builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "Shared Value", 0);
+        builder.Write(" more text ");
+        builder.InsertTextInput("Field3", TextFormFieldType.Regular, "", "Shared Value", 0);
+
+        builder.ReplaceField("Shared Value", "New Text");
+
+        var fields = document.Range.FormFields;
+        Assert.That(fields, Is.Empty);
+
+        var text = document.Range.Text;
+        var count = Regex.Matches(text, "New Text").Count;
+        Assert.That(count, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void FindFields_MatchesBothNameAndResult_ReturnsAllMatches()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("SearchTerm", TextFormFieldType.Regular, "", "Other Value", 0);
+        builder.Write(" ");
+        builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "SearchTerm", 0);
+
+        var result = builder.FindFields("SearchTerm");
+
+        Assert.That(result, Has.Count.EqualTo(2));
     }
 }

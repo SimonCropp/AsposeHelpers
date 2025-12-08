@@ -13,9 +13,21 @@ public static partial class WordExtensions
 
             foreach (var field in fields)
             {
-                builder.MoveTo(field);
-                field.RemoveField();
+                Node? node = field;
+                while (node != null &&
+                       node.NodeType != NodeType.FieldStart)
+                {
+                    node = node.PreviousSibling;
+                }
+
+                if (node == null)
+                {
+                    throw new($"Could not find PreviousSibling for field: {name}");
+                }
+
+                builder.MoveTo(node);
                 builder.Write(value);
+                field.RemoveField();
             }
         }
 
