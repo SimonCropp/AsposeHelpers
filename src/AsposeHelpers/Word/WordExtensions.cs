@@ -30,11 +30,15 @@ public static partial class WordExtensions
             var found = fields.Where(_ => _.Name == name || _.Result == name).ToList();
             if (found.Count == 0)
             {
+                var fieldsByName = fields.Where(_ => !string.IsNullOrWhiteSpace(_.Name)).Select(_ => _.Name);
+                var fieldsByResult = fields.Where(_ => !string.IsNullOrWhiteSpace(_.Result)).Select(_ => _.Result);
+
+                List<string> fieldIds = [..fieldsByName, ..fieldsByResult];
                 throw new(
                     $"""
                      Could not find field: {name}.
                      Existing fields are:
-                     {string.Join('\n', fields.Select(_ => _.Name).Distinct().Order().Select(_ => $" * {_}"))}
+                     {string.Join('\n', fieldIds.Distinct().Order().Select(_ => $" * {_}"))}
                      """);
             }
 
