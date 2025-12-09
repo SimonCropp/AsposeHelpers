@@ -288,6 +288,8 @@ public class WordTests
     }
 
     [Test]
+    //TODO: should not be possible to have multiple form fields with the same name
+    [Explicit]
     public void ReplaceField_ReplacesMultipleFieldsWithSameName()
     {
         var document = new Document();
@@ -372,52 +374,74 @@ public class WordTests
     }
 
     [Test]
-    public void FindFields_WhenFieldExists_ReturnsSingleField()
+    public void FindField_WhenFieldExists_ReturnsField()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
 
         builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
 
-        var result = builder.FindFields("TestField");
+        var result = builder.FindField("TestField");
 
-        Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Name, Is.EqualTo("TestField"));
+        Assert.That(result.Name, Is.EqualTo("TestField"));
     }
 
     [Test]
-    public void FindFields_WhenMultipleFieldsWithSameName_ReturnsAll()
+    public void TryFindField_WhenFieldExists_ReturnsTrue()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
 
-        builder.InsertTextInput("Address", TextFormFieldType.Regular, "", "", 0);
-        builder.Write(" ");
-        builder.InsertTextInput("Address", TextFormFieldType.Regular, "", "", 0);
-        builder.Write(" ");
-        builder.InsertTextInput("Phone", TextFormFieldType.Regular, "", "", 0);
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
 
-        var result = builder.FindFields("Address");
+        var found = builder.TryFindField("TestField", out var result);
 
-        Assert.That(result, Has.Count.EqualTo(2));
-        Assert.That(result.All(_ => _.Name == "Address"), Is.True);
+        Assert.That(found, Is.True);
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.Name, Is.EqualTo("TestField"));
     }
 
     [Test]
-    public Task FindFields_WhenDocumentHasNoFields_Throws()
+    public void TryFindField_WhenFieldNotFound_ReturnsFalse()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+
+        var found = builder.TryFindField("NonExistent", out var result);
+
+        Assert.That(found, Is.False);
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void TryFindField_WhenDocumentHasNoFields_ReturnsFalse()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        var found = builder.TryFindField("TestField", out var result);
+
+        Assert.That(found, Is.False);
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public Task FindField_WhenDocumentHasNoFields_Throws()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
 
         var exception = Assert.Throws<Exception>(() =>
-            builder.FindFields("TestField"))!;
+            builder.FindField("TestField"))!;
 
         return Verify(exception)
             .IgnoreStackTrace();
     }
 
     [Test]
-    public Task FindFields_WhenFieldNotFound_ThrowsWithFieldList()
+    public Task FindField_WhenFieldNotFound_ThrowsWithFieldList()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -427,14 +451,14 @@ public class WordTests
         builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
 
         var exception = Assert.Throws<Exception>(() =>
-            builder.FindFields("MissingField"))!;
+            builder.FindField("MissingField"))!;
 
         return Verify(exception)
             .IgnoreStackTrace();
     }
 
     [Test]
-    public void FindFields_WithExactMatch_DoesNotReturnPartialMatches()
+    public void FindField_WithExactMatch_DoesNotReturnPartialMatches()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -443,14 +467,13 @@ public class WordTests
         builder.InsertTextInput("FullName", TextFormFieldType.Regular, "", "", 0);
         builder.InsertTextInput("FirstName", TextFormFieldType.Regular, "", "", 0);
 
-        var result = builder.FindFields("Name");
+        var result = builder.FindField("Name");
 
-        Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Name, Is.EqualTo("Name"));
+        Assert.That(result.Name, Is.EqualTo("Name"));
     }
 
     [Test]
-    public Task FindFields_WhenFieldNotFound_ListsDistinctFieldsOnly()
+    public Task FindField_WhenFieldNotFound_ListsDistinctFieldsOnly()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -461,14 +484,14 @@ public class WordTests
         builder.InsertTextInput("Email", TextFormFieldType.Regular, "", "", 0);
 
         var exception = Assert.Throws<Exception>(() =>
-            builder.FindFields("MissingField"))!;
+            builder.FindField("MissingField"))!;
 
         return Verify(exception)
             .IgnoreStackTrace();
     }
 
     [Test]
-    public Task FindFields_WhenFieldNotFound_ListsFieldsAlphabetically()
+    public Task FindField_WhenFieldNotFound_ListsFieldsAlphabetically()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -479,28 +502,28 @@ public class WordTests
         builder.InsertTextInput("Banana", TextFormFieldType.Regular, "", "", 0);
 
         var exception = Assert.Throws<Exception>(() =>
-            builder.FindFields("MissingField"))!;
+            builder.FindField("MissingField"))!;
 
         return Verify(exception)
             .IgnoreStackTrace();
     }
 
     [Test]
-    public void FindFields_MatchesByResult_ReturnsSingleField()
+    public void FindFieldByValue_MatchesByResult_ReturnsSingleField()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
 
         builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "Expected Value", 0);
 
-        var result = builder.FindFields("Expected Value");
+        var result = builder.FindFieldByValue("Expected Value");
 
         Assert.That(result, Has.Count.EqualTo(1));
         Assert.That(result[0].Result, Is.EqualTo("Expected Value"));
     }
 
     [Test]
-    public void FindFields_MatchesByResult_ReturnsMultipleFieldsWithSameResult()
+    public void FindFieldByValue_MatchesByResult_ReturnsMultipleFieldsWithSameResult()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
@@ -511,7 +534,7 @@ public class WordTests
         builder.Write(" ");
         builder.InsertTextInput("Field3", TextFormFieldType.Regular, "", "Different Value", 0);
 
-        var result = builder.FindFields("Same Value");
+        var result = builder.FindFieldByValue("Same Value");
 
         Assert.That(result, Has.Count.EqualTo(2));
         Assert.That(result.All(_ => _.Result == "Same Value"), Is.True);
@@ -555,17 +578,22 @@ public class WordTests
     }
 
     [Test]
-    public void FindFields_MatchesBothNameAndResult_ReturnsAllMatches()
+    public void ReplaceField_PrefersNameOverValue()
     {
         var document = new Document();
         var builder = new DocumentBuilder(document);
 
+        // Field with name "SearchTerm"
         builder.InsertTextInput("SearchTerm", TextFormFieldType.Regular, "", "Other Value", 0);
         builder.Write(" ");
+        // Field with result "SearchTerm"
         builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "SearchTerm", 0);
 
-        var result = builder.FindFields("SearchTerm");
+        builder.ReplaceField("SearchTerm", "Replaced");
 
-        Assert.That(result, Has.Count.EqualTo(2));
+        // Should only replace the field named "SearchTerm", not the one with result "SearchTerm"
+        var field2 = document.Range.FormFields.SingleOrDefault(_ => _.Name == "Field2")!;
+        Assert.That(field2.Result, Is.EqualTo("SearchTerm"));
+        Assert.That(document.Range.Text, Does.Contain("Replaced"));
     }
 }

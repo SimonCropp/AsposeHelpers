@@ -1,4 +1,5 @@
-﻿using Aspose.Words.Fields;
+﻿using System.Diagnostics.CodeAnalysis;
+using Aspose.Words.Fields;
 using Aspose.Words.Tables;
 
 namespace Aspose.Words;
@@ -9,8 +10,15 @@ public static partial class WordExtensions
     {
         public void ReplaceField(string name, string value)
         {
-            var fields = builder.FindFields(name);
+            if(builder.TryFindField(name, out var fieldByName))
+            {
+                builder.MoveToBookmark(name, false, true);
+                fieldByName.RemoveField();
+                builder.Write(value);
+                return;
+            }
 
+            var fields = builder.FindFieldByValue(name);
             foreach (var field in fields)
             {
                 Node? node = field;
@@ -31,37 +39,77 @@ public static partial class WordExtensions
             }
         }
 
-        public List<FormField> FindFields(string name)
+        public void DisplaceField(string name)
+        {
+            var field = builder.FindField(name);
+            builder.MoveToBookmark(name, false, true);
+            field.RemoveField();
+        }
+
+        public List<FormField> FindFieldByValue(string value)
         {
             var fields = builder.Document.Range.FormFields;
             if (fields.Count == 0)
             {
-                throw new($"Could not find field: {name}. Document contains no fields.");
+                throw new($"Could not find field with value: {value}. Document contains no fields.");
             }
 
-            var found = fields.Where(_ => _.Name == name || _.Result == name).ToList();
+            var found = fields.Where(_ => _.Result == value).ToList();
             if (found.Count == 0)
             {
-                var fieldsByName = fields.Where(_ => !string.IsNullOrWhiteSpace(_.Name)).Select(_ => _.Name);
-                var fieldsByResult = fields.Where(_ => !string.IsNullOrWhiteSpace(_.Result)).Select(_ => _.Result);
+                var values = fields
+                    .Select(_ => _.Result)
+                    .Where(_ => !string.IsNullOrEmpty(_))
+                    .Distinct()
+                    .Order();
 
-                List<string> fieldIds = [..fieldsByName, ..fieldsByResult];
                 throw new(
                     $"""
-                     Could not find field: {name}.
+                     Could not find field: {value}.
                      Existing fields are:
-                     {string.Join('\n', fieldIds.Distinct().Order().Select(_ => $" * {_}"))}
+                     {string.Join('\n', values.Select(_ => $" * {_}"))}
                      """);
             }
 
             return found;
         }
 
-        public void DisplaceField(string name)
+        public bool TryFindField(string name, [NotNullWhen(true)] out FormField? field)
         {
-            var field = builder.FindFields(name).Single();
-            builder.MoveToBookmark(name, false, true);
-            field.RemoveField();
+            var fields = builder.Document.Range.FormFields;
+            if (fields.Count == 0)
+            {
+                field = null;
+                return false;
+            }
+
+            field = fields.SingleOrDefault(_ => _.Name == name);
+            return field != null;
+        }
+
+        public FormField FindField(string name)
+        {
+            if (builder.TryFindField(name, out var field))
+            {
+                return field;
+            }
+
+            var fields = builder.Document.Range.FormFields;
+            if (fields.Count == 0)
+            {
+                throw new($"Could not find field: {name}. Document contains no fields.");
+            }
+
+            var names = fields
+                .Select(_ => _.Name)
+                .Where(_ => !string.IsNullOrEmpty(_))
+                .Distinct().Order();
+            throw new(
+                $"""
+                 Could not find field: {name}.
+                 Existing fields are:
+                 {string.Join('\n', names.Select(_ => $" * {_}"))}
+                 """);
         }
 
         public void WriteEmail(string email)
