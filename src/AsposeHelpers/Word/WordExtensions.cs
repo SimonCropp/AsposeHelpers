@@ -39,6 +39,37 @@ public static partial class WordExtensions
             }
         }
 
+        public void ReplaceFieldWithHtml(string name, string html)
+        {
+            if(builder.TryFindField(name, out var fieldByName))
+            {
+                builder.MoveToBookmark(name, false, true);
+                fieldByName.RemoveField();
+                builder.InsertHtml(html);
+                return;
+            }
+
+            var fields = builder.FindFieldByValue(name);
+            foreach (var field in fields)
+            {
+                Node? node = field;
+                while (node != null &&
+                       node.NodeType != NodeType.FieldStart)
+                {
+                    node = node.PreviousSibling;
+                }
+
+                if (node == null)
+                {
+                    throw new($"Could not find PreviousSibling for field: {name}");
+                }
+
+                builder.MoveTo(node);
+                builder.InsertHtml(html);
+                field.RemoveField();
+            }
+        }
+
         public void DisplaceField(string name)
         {
             var field = builder.FindField(name);

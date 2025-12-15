@@ -596,4 +596,54 @@ public class WordTests
         Assert.That(field2.Result, Is.EqualTo("SearchTerm"));
         Assert.That(document.Range.Text, Does.Contain("Replaced"));
     }
+
+    [Test]
+    public void ReplaceFieldWithHtml_ReplacesFieldWithHtmlContent()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("TestField", TextFormFieldType.Regular, "", "", 0);
+
+        builder.ReplaceFieldWithHtml("TestField", "<b>Bold Text</b>");
+
+        var field = document.Range.FormFields.SingleOrDefault(_ => _.Name == "TestField");
+        Assert.That(field, Is.Null);
+        Assert.That(document.Range.Text, Does.Contain("Bold Text"));
+    }
+
+    [Test]
+    public void ReplaceFieldWithHtml_MatchesByResult_ReplacesMultipleFields()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        builder.InsertTextInput("Field1", TextFormFieldType.Regular, "", "Shared Value", 0);
+        builder.Write(" some text ");
+        builder.InsertTextInput("Field2", TextFormFieldType.Regular, "", "Shared Value", 0);
+        builder.Write(" more text ");
+        builder.InsertTextInput("Field3", TextFormFieldType.Regular, "", "Shared Value", 0);
+
+        builder.ReplaceFieldWithHtml("Shared Value", "<i>Italic</i>");
+
+        var fields = document.Range.FormFields;
+        Assert.That(fields, Is.Empty);
+
+        var text = document.Range.Text;
+        var count = Regex.Matches(text, "Italic").Count;
+        Assert.That(count, Is.EqualTo(3));
+    }
+
+    [Test]
+    public Task ReplaceFieldWithHtml_ThrowsWhenFieldNotFound()
+    {
+        var document = new Document();
+        var builder = new DocumentBuilder(document);
+
+        var exception = Assert.Throws<Exception>(() =>
+            builder.ReplaceFieldWithHtml("NonExistent", "<b>value</b>"))!;
+
+        return Verify(exception)
+            .IgnoreStackTrace();
+    }
 }
