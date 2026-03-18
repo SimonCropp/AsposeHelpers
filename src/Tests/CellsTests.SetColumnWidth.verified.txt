@@ -23,8 +23,7 @@
       ColorType: Text1
     },
     Color: 0, 0, 0,
-    ArgbColor: -16777216,
-    IsNormalizeHeights: false
+    ArgbColor: -16777216
   },
   HorizontalAlignment: General,
   VerticalAlignment: Center,

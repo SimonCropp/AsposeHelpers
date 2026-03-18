@@ -12,6 +12,11 @@
     RevisionNumber: 1
   },
   ShadeFormData: true,
+  Fonts: [
+    Arial,
+    Symbol,
+    Times New Roman
+  ],
   Text:
 ## **the text**
 
